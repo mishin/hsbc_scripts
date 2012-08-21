@@ -1,2 +1,5 @@
 *.dsx
 CVS
+*.tgz
+*.gz
+*.tar
