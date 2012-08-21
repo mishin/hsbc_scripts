@@ -1,0 +1,11 @@
+sed -i '/^  *Identifier "Day1_/s/Day1_/Date_/' *
+sed -i '/^  *Name "Day1_/s/Day1_/Date_/' *
+sed -i '/^  *Category/s/Day1/Ongoing_Date/' *
+
+
+sed -i '/^   Identifier "djpEXTday1/s/day1/date/' *
+sed -i '/^      Name "djpEXTday1/s/day1/date/' *
+sed -i '/^      Category/s/day1/ongoingDate/' *
+
+
+

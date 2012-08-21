@@ -1,0 +1,353 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.AFADDRP"
+      DateModified "2000-05-21"
+      TimeModified "12.16.18"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.AFADDRP (as seen from vmrhel) - 5/21/2000 3:32:33 PM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."AFADDRP"
+Unqualified name: AFADDRP
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "FAMDFL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FARRN#"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "12"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "14"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FACTCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "2"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FAGMAB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FAFPAB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FAFPAS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FAFPAX"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FAPYST"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FASPID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "12"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FASPSN"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "28"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "28"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FANAD1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "35"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "35"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FANAD2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "35"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "35"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FANAD3"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "35"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "35"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FANAD4"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "35"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "35"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FANAD5"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "35"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "35"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FALANG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FADLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "FATLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "STARTDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ENDDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "OPERATIONTAG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "CONTEXT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"AFADDRP\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

@@ -1,0 +1,5 @@
+CILFDDP HVLNCT CASE hex(substr(HVLNCT,75)) WHEN '22' THEN substr(HVLNCT,1,(posstr(hex(HVLNCT),'22')-1)/2) ELSE HVLNCT END
+
+SSHLDYP X3HLDY replace(X3HLDY,X'FF',X'40')
+
+

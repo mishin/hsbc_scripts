@@ -1,0 +1,40 @@
+EPCLWAP ECSKED Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.ECSKED),'935'))
+EPDSCRP YRMK01 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK01),'935'))
+EPDSCRP YRMK02 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK02),'935'))
+EPDSCRP YRMK03 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK03),'935'))
+EPDSCRP YRMK04 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK04),'935'))
+EPDSCRP YRMK05 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK05),'935'))
+EPDSCRP YRMK06 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK06),'935'))
+EPDSCRP YRMK07 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK07),'935'))
+EPDSCRP YRMK08 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK08),'935'))
+EPDSCRP YRMK09 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK09),'935'))
+EPDSCRP YRMK10 Convert(StringToUString(xxd('A1'),'935'),'',StringToUString(xxd(lnkFROMdb2TOtfp.YRMK10),'935'))
+SSICADP ZYNTL1 CompactWhiteSpace(stringtoustring(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'))[1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)]
+SSICADP ZYNTL2 CompactWhiteSpace(stringtoustring(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)*1+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)]
+SSICADP ZYNTL3 CompactWhiteSpace(stringtoustring(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)*2+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)]
+SSICADP ZYNTL4 CompactWhiteSpace(stringtoustring(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4)*3+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.ZYNTL1:lnkFROMdb2TOtfp.ZYNTL2:lnkFROMdb2TOtfp.ZYNTL3:lnkFROMdb2TOtfp.ZYNTL4),'935'),'gbk')))/4+3)]
+SSICAJP WVNTL1 CompactWhiteSpace(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'))[1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)]
+SSICAJP WVNTL2 CompactWhiteSpace(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)*1+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)]
+SSICAJP WVNTL3 CompactWhiteSpace(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)*2+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)]
+SSICAJP WVNTL4 CompactWhiteSpace(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'))[Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4)*3+1,Ceil(gbklen(CompactWhiteSpace(UStringtoString(StringtoUString(xxd(lnkFROMdb2TOtfp.WVNTL1:lnkFROMdb2TOtfp.WVNTL2:lnkFROMdb2TOtfp.WVNTL3:lnkFROMdb2TOtfp.WVNTL4),'935'),'gbk')))/4+3)]
+SSWCSVP CSFANM IF IsNull(lnkFROMdb2TOtfp.CSFANM) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSFANM),'935')
+SSWCSVP CSAINM IF IsNull(lnkFROMdb2TOtfp.CSAINM) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSAINM),'935')
+SSWCSVP CSALTN IF IsNull(lnkFROMdb2TOtfp.CSALTN) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSALTN),'935')
+SSWCSVP CSTITE IF IsNull(lnkFROMdb2TOtfp.CSTITE) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSTITE),'935')
+SSWCSVP CSOCCU IF IsNull(lnkFROMdb2TOtfp.CSOCCU) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSOCCU),'935')
+SSWCSVP CSPSTN IF IsNull(lnkFROMdb2TOtfp.CSPSTN) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSPSTN),'935')
+SSWCSVP CSCAGN IF IsNull(lnkFROMdb2TOtfp.CSCAGN) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSCAGN),'935')
+SSWCSVP CSDOBR IF IsNull(lnkFROMdb2TOtfp.CSDOBR) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSDOBR),'935')
+SSWCSVP CSPLOB IF IsNull(lnkFROMdb2TOtfp.CSPLOB) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSPLOB),'935')
+SSWCSVP CSDECE IF IsNull(lnkFROMdb2TOtfp.CSDECE) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSDECE),'935')
+SSWCSVP CSPSPO IF IsNull(lnkFROMdb2TOtfp.CSPSPO) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSPSPO),'935')
+SSWCSVP CSSSN  IF IsNull(lnkFROMdb2TOtfp.CSSSN)  THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSSSN), '935')
+SSWCSVP CSLCNS IF IsNull(lnkFROMdb2TOtfp.CSLCNS) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSLCNS),'935')
+SSWCSVP CSCMOP IF IsNull(lnkFROMdb2TOtfp.CSCMOP) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSCMOP),'935')
+SSWCSVP CSCMPO IF IsNull(lnkFROMdb2TOtfp.CSCMPO) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSCMPO),'935')
+SSWCSVP CSLNKT IF IsNull(lnkFROMdb2TOtfp.CSLNKT) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSLNKT),'935')
+SSWCSVP CSFUIN IF IsNull(lnkFROMdb2TOtfp.CSFUIN) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSFUIN),'935')
+SSWCSVP CSKEYW IF IsNull(lnkFROMdb2TOtfp.CSKEYW) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSKEYW),'935')
+SSWCSVP CSEXSR IF IsNull(lnkFROMdb2TOtfp.CSEXSR) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSEXSR),'935')
+SSWCSVP CSUPTE IF IsNull(lnkFROMdb2TOtfp.CSUPTE) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSUPTE),'935')
+SSWCSVP CSASOF IF IsNull(lnkFROMdb2TOtfp.CSASOF) THEN 'NULL' ELSE StringToUString(xxd(lnkFROMdb2TOtfp.CSASOF),'935')

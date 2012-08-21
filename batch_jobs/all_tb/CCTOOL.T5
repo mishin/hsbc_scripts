@@ -1,0 +1,70 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.T5"
+      DateModified "2000-05-31"
+      TimeModified "01.50.24"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.T5 (as seen from vmrhel) - 5/31/2000 10:04:11
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."T5"
+Unqualified name: T5
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Multivalued "0"
+      SPErrorCodes ";"
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "COL1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "4"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field='NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN'"
+         ExtendedPrecision "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "3"
+         Scale "1"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "5"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field='NNNNN'"
+         ExtendedPrecision "0"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      SEQ-ColHeaders "0"
+      SEQ-FixedWidth "0"
+      SEQ-ColSpace "0"
+      SEQ-OmitNewLine "0"
+      AllowColumnMapping "0"
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"T5\""
+      PadChar ""
+      APTRecordProp "final_delim=end, record_delim='\\n', delim=',', quote=double"
+   END DSRECORD

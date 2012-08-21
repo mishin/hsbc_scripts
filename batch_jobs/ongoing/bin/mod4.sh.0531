@@ -1,0 +1,66 @@
+#!/usr/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -eq 0 ]; then
+  exit
+fi
+
+cat $rootdir/demo_job/seqlist |awk '{print $4}' |read fn
+fn=$rootdir/demo_job/$fn
+
+tn=$1
+
+vi +1 $fn <<EOF
+0/      Columns
+jma/      MetaBag
+kd'aOPANLMMARKHERE:wq
+EOF
+
+cat $rootdir/tmp/$tn |awk -F'"' '/^  *Identifier/{print$2}' |read fulltn
+
+tmp=$rootdir/tmp/$$
+summ=$rootdir/tmp/$tn.summ
+cp /dev/null $summ
+cat $rootdir/tmp/$tn.filelist |while read file ; do
+  cat $rootdir/tmp/$file.2 |awk -F'"' '/^  *Name/{print$2}' |read coln
+  cp -f $rootdir/tmp/$file.2 $tmp
+  vi +1 $tmp <<EOF
+0/DisplaySize
+o         Derivation "link1.$coln"
+         Group "0"
+         ParsedDerivation "link1.$coln"
+         SourceColumn "link1.$coln"
+         SortKey "0"
+         SortType "0"
+         TableDef "$fulltn":s/\\\\/\\\\\\\\/g
+o         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "$coln"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0":wq
+EOF
+  cat $tmp >>$summ
+done
+
+vi +1 $fn <<EOF
+0/PANLMMARKHERE
+k:r $summ
+/PANLMMARKHERE
+dd1G0/^record
+jjma/^)
+kd'ak:r $rootdir/tmp/$tn.f4
+:wq
+EOF
+
+rm -f $summ
+rm -f $rootdir/tmp/$$
+

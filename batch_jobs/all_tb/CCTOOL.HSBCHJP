@@ -1,0 +1,803 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.HSBCHJP"
+      DateModified "2000-05-21"
+      TimeModified "08.19.45"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.HSBCHJP (as seen from vmrhel) - 5/21/2000 11:19:58 AM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."HSBCHJP"
+Unqualified name: HSBCHJP
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "EDCPWS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCPUS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCPTM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDAVWS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDAVUS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDAVDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDAVTM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDPSTS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDBAIM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDMNCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSCID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "12"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCTCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "2"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDDCG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDDCB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDDCS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDGMAB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDACB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDACS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDACX"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDBCDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCBHD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCCEB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCEB1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCEB2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCEB3"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCEB4"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCEB5"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCCED"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCNBH"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDPBCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDPBHD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDWCEB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSTAT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFCY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFRT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "7"
+         Scale "2"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "9"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFCU"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFCL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDRECD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDLRCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDCADT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDTCAY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDTCCY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDTCAC"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "18"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "18"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFAD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDSFCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDBLQY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDDLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "EDTLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "STARTDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ENDDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "OPERATIONTAG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"HSBCHJP\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

@@ -1,0 +1,83 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.PARAMETERS"
+      DateModified "2000-05-19"
+      TimeModified "21.41.32"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.PARAMETERS (as seen from vmrhel) - 5/19/2008 11:15:22 PM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."PARAMETERS"
+Unqualified name: PARAMETERS
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "CCID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "8"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "22"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "APP_NAME"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "20"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "20"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PARAM_NAME"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "100"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "100"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PARAM_VAL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "100"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "100"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"PARAMETERS\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

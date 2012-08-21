@@ -1,0 +1,359 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\vm2k3\\public.SERVICE_CONTEXT"
+      DateModified "2000-05-24"
+      TimeModified "08.34.10"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: vm2k3 / public.SERVICE_CONTEXT (as seen from vmrhel) - 5/24/2000 13:30:02
+Type: TABLE
+Owner: public
+Fully-qualified name: "public"."SERVICE_CONTEXT"
+Unqualified name: SERVICE_CONTEXT
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "agent_context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "start_time"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "23"
+         Scale "3"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "23"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "status"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "16"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "16"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "sub_status"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "status_message"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "-1"
+         Precision "512"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "512"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "status_time"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "23"
+         Scale "3"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "23"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "completed_transactions"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "active_transactions"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "timedout_transactions"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rolledback_transactions"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "processed_change_events"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "deleted_change_events"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "bytes_written"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "opened_files"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "opened_files_virtual"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "memory_usage"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "node_id"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "2"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "last_transaction_timestamp"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "26"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "26"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "version"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "errors"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reduced_transactions"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "compensation_records"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "11"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "13"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"vmrhel\"|SoftwareProduct=\"Attunity Connect Driver\"|DataStore=\"\"|DataSchema(Owner)=\"public\"|DataCollection(Table)=\"SERVICE_CONTEXT\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

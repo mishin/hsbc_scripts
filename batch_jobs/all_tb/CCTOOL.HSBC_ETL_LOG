@@ -1,0 +1,51 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.HSBC_ETL_LOG"
+      DateModified "2000-05-21"
+      TimeModified "08.19.41"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.HSBC_ETL_LOG (as seen from vmrhel) - 5/21/2000 11:19:55 AM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."HSBC_ETL_LOG"
+Unqualified name: HSBC_ETL_LOG
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "CONTEXT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "JOBNAME"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "50"
+         PadChar ""
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"HSBC_ETL_LOG\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

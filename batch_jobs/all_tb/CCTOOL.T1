@@ -1,0 +1,53 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.T1"
+      DateModified "2000-05-23"
+      TimeModified "17.11.55"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.T1 (as seen from vmrhel) - 5/23/2000 9:50:42 PM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."T1"
+Unqualified name: T1
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "COL1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"T1\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

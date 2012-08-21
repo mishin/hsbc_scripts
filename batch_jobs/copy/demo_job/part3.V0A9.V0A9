@@ -1,0 +1,17 @@
+   BEGIN DSRECORD
+      Identifier "V0A9"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CAnnotation"
+      Readonly "0"
+      Name "V0A9"
+      AnnotationType "0"
+      AnnotationText "load data from db2"
+      TextFont "Arial\\10\\0\\0\\0\\400\\0"
+      TextHorizontalJustification "1"
+      TextVerticalJustification "1"
+      TextColor "0"
+      BackgroundColor "12713983"
+      BackgroundTransparent "0"
+      BorderVisible "1"
+   END DSRECORD

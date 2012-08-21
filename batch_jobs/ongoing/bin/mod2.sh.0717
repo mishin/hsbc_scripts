@@ -1,0 +1,130 @@
+#!/usr/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -eq 0 ]; then
+  exit
+fi
+
+cat $rootdir/demo_job/seqlist |awk '{print $2}' |read fn
+fn=$rootdir/demo_job/$fn
+
+tn=$1
+
+if [ $tts -eq 1 ]; then
+  cat $rootdir/etc/tts |grep ",${tn}," |awk -F',' '{print $1" "$4}' |read lib solu
+  if [ "x" == "x$lib" ]; then
+    lib=UNKNOWNLIB
+  fi 
+else
+  lib=AOCHUBFP
+fi
+
+if [ $tts -eq 1 ]; then
+  $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""$solu":wq
+EOF
+else
+  echo $tn |cut -c1 |read h
+  case $h in 
+  [A-G]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST13_SA":wq
+EOF
+  ;;
+  [H-I]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST15_SA":wq
+:wq
+EOF
+  ;;
+  [L-Z]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST12_SA":wq
+:wq
+EOF
+  ;;
+  esac
+fi
+
+$VI +1 $fn <<EOF
+0/         Name "query"
+/^SELECT
+jddk:r $rootdir/tmp/$tn.f1
+/^FROM
+j0C$tn:w
+/tablename
+f'lcf'$tn':w
+01G/      Columns
+jma/      MetaBag
+kd'aOPANLMMARKHERE:wq
+EOF
+
+cat $rootdir/tmp/$tn |awk -F'"' '/^  *Identifier/{print$2}' |read fulltn
+
+tmp=$rootdir/tmp/$$
+summ=$rootdir/tmp/$tn.summ
+cp /dev/null $summ
+cat $rootdir/tmp/$tn.filelist |while read file ; do
+cat $rootdir/tmp/$file.1 |awk -F'"' '/^  *Name/{print$2}' |read coln
+  cp -f $rootdir/tmp/$file.1 $tmp
+  $VI +1 $tmp <<EOF
+0/DisplaySize
+o         TableDef "$fulltn":s/\\\\/\\\\\\\\/g
+o         ColumnReference "$coln":wq
+EOF
+  cat $tmp >>$summ
+done
+
+$VI +1 $fn <<EOF
+0/PANLMMARKHERE
+k:r $summ
+/PANLMMARKHERE
+dd:wq
+EOF
+
+rm -f $summ $tmp
+
+# modify tablename with #
+echo "$tn" |grep -q "@"
+if [ $? -eq 0 ]; then
+  $VI +1 $fn <<EOF
+0/^  *Name "query"
+/^FROM
+j:s/\\([^ ,][^ ,]*[@][@]*[^ ,][^ ,]*\\)/"\\1"/g
+:wq
+EOF
+fi
+
+# modify colname with #
+# multi sharp character in column name
+cat $rootdir/tmp/$tn.sharp |grep -q '[#@$].*[#@$]'
+if [ $? -eq 0 ]; then
+  $VI +1 $fn <<EOF
+0/         Name "query"
+/^SELECT
+j:s/\\([#@$][^ ,][^ ,]*\\)[#@$]/\\1_/g
+:wq
+EOF
+fi
+# single sharp character in column name
+cat $rootdir/tmp/$tn.sharp |xargs |read cc
+if [ "x" != "x$cc" ]; then
+  $VI +1 $fn <<EOF
+0/         Name "query"
+/^SELECT
+j:s/\\([^ ,][^ ,]*\\)\\([#@$]\\)\\([^ ,]*\\)/\\1\\2\\3 \\1_\\3/g
+:s/\\([^ ,][^ ,]*[#@$][#@$]*[^ ,]*\\)/"\\1"/g
+:wq
+EOF
+  cat $rootdir/tmp/$tn.sharp |while read sharpcol ; do
+  $VI +1 $fn <<EOF
+0/^  *Name "$sharpcol"
+:s/[@#$]/_/g
+:wq
+EOF
+  done
+fi
+
+

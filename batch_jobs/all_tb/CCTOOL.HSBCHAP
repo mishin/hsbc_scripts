@@ -1,0 +1,810 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.HSBCHAP"
+      DateModified "2000-05-21"
+      TimeModified "10.22.25"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.HSBCHAP (as seen from vmrhel) - 5/21/2000 11:19:57 AM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."HSBCHAP"
+Unqualified name: HSBCHAP
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Multivalued "0"
+      SPErrorCodes ";"
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "PBCPWS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCPUS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCPTM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBAVWS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBAVUS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBAVDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBAVTM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBPSTS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBBAIM"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBMNCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSCID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "12"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCTCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "2"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBDCG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBDCB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBDCS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBGMAB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "4"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "4"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBACB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBACS"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBACX"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBBCDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCBHD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCCEB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCEB1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCEB2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCEB3"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCEB4"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCEB5"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCCED"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCNBH"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBPBCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBPBHD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBWCEB"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "25"
+         Scale "6"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "27"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSTAT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFCY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFRT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "7"
+         Scale "2"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "9"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFCU"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFCL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBRECD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBLRCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBCADT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBTCAY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBTCCY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBTCAC"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "18"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "18"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFAD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBSFCD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBBLQY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "30"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBDLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PBTLUP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "3"
+         Precision "38"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "40"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "STARTDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ENDDATE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "OPERATIONTAG"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      SEQ-ColHeaders "0"
+      SEQ-FixedWidth "0"
+      SEQ-ColSpace "0"
+      SEQ-OmitNewLine "0"
+      AllowColumnMapping "0"
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"HSBCHAP\""
+      PadChar ""
+      APTRecordProp "final_delim=end, record_delim='\\n', delim=',', quote=double"
+   END DSRECORD

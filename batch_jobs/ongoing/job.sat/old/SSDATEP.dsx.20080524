@@ -1,0 +1,3257 @@
+BEGIN HEADER
+   CharacterSet "CP1252"
+   ExportingTool "Ascential DataStage Export"
+   ToolVersion "4"
+   ServerName "130.21.162.23:35101"
+   ToolInstanceID "dpr_orc_dev"
+   MDISVersion "1.0"
+   Date "2008-05-25"
+   Time "15.31.27"
+   ServerVersion "7.5.1.A"
+END HEADER
+BEGIN DSJOB
+   Identifier "j20080525"
+   DateModified "2008-05-25"
+   TimeModified "15.30.39"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "j20080525"
+      NextID "1"
+      Container "V0"
+      JobVersion "50.0.0"
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "$DS_ENABLE_RESERVED_CHAR_CONVERT"
+         Prompt "Enable reserved character handling"
+         Default "True"
+         HelpTxt "Enable handling of reserved characters in DB2 and Oracle column names."
+         ParamType "5"
+         ListValues "False\(9)True"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceMode"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSeq"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceRecords"
+         Value "100"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSkip"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TracePeriod"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDateFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXTimeStampFormat="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "PXDecimalSeparator="
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MessageHandler"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "IdentList"
+         Value "odbc1|transformer|output|sort|rd|odbc2"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "ClientCodePage"
+         Value "1252"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V0S6P1_password"
+         Value "LLI@0JV@L9:>4OFM4;N<3O@G"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V0S11P1_password"
+         Value "LLI@0JV@L9:>4OFM4;N<3O@G"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      OrchestrateCode =+=+=+=
+#################################################################
+#### STAGE: odbc1
+## Operator
+odbcread
+## Operator options
+-db_cs [&DSProjectMapName]
+-data_source 'AOC_Oracle_Test4'
+-user 'orccnus1'
+-password [&__V0S6P1_password]
+-query 'SELECT 
+  context, agent_context, timestamp, operation, tableName, transactionID, sequence, journalCode, entryType, jobName, userName, jobNumber, programName, fileName, libraryName, memberName, RRN, userProfile, systemName, referentialConstraint, trigger, objectNameIndicator, XSMDFL, XSRRN#, XSTDFD, XSWDAY, XSBCYL, XSTDDT, XSLPDT, XSNPDT, XSADYR, XSEWKD
+FROM 
+SSDATEP
+WHERE
+context >
+(
+select context from table_context WHERE 
+tablename = \\'SSDATEP\\'
+)'
+-use_strings
+
+## General options
+[ident('odbc1'); jobmon_ident('odbc1')]
+## Outputs
+0> [modify (
+  context:not_nullable string[32]=context;
+  agent_context:not_nullable string[64]=agent_context;
+  timestamp:not_nullable string[26]=timestamp;
+  operation:not_nullable string[12]=operation;
+  tableName:not_nullable string[64]=tableName;
+  transactionID:not_nullable string[24]=transactionID;
+  sequence:not_nullable string[max=20]=sequence;
+  journalCode:not_nullable string[1]=journalCode;
+  entryType:not_nullable string[2]=entryType;
+  jobName:not_nullable string[10]=jobName;
+  userName:not_nullable string[10]=userName;
+  jobNumber:not_nullable string[6]=jobNumber;
+  programName:not_nullable string[10]=programName;
+  fileName:not_nullable string[10]=fileName;
+  libraryName:not_nullable string[10]=libraryName;
+  memberName:not_nullable string[10]=memberName;
+  RRN:not_nullable string[10]=RRN;
+  userProfile:not_nullable string[10]=userProfile;
+  systemName:not_nullable string[8]=systemName;
+  referentialConstraint:not_nullable NULL=referentialConstraint;
+  trigger:not_nullable NULL=trigger;
+  objectNameIndicator:not_nullable string[1]=objectNameIndicator;
+  XSMDFL:nullable string[1]=XSMDFL;
+  XSRRN#:nullable NULL=XSRRN#;
+  XSTDFD:nullable string[9]=XSTDFD;
+  XSWDAY:nullable NULL=XSWDAY;
+  XSBCYL:nullable NULL=XSBCYL;
+  XSTDDT:nullable NULL=XSTDDT;
+  XSLPDT:nullable NULL=XSLPDT;
+  XSNPDT:nullable NULL=XSNPDT;
+  XSADYR:nullable NULL=XSADYR;
+  XSEWKD:nullable NULL=XSEWKD;
+keep
+  context, agent_context, timestamp, operation, tableName, transactionID, sequence, journalCode, entryType, jobName, userName, jobNumber, programName, fileName, libraryName, memberName, RRN, userProfile, systemName, referentialConstraint, trigger, objectNameIndicator, XSMDFL, XSRRN#, XSTDFD, XSWDAY, XSBCYL, XSTDDT, XSLPDT, XSNPDT, XSADYR, XSEWKD;
+)] 'odbc1:link1.v'
+;
+
+#################################################################
+#### STAGE: transformer
+## Operator
+transform
+## Operator options
+-flag run
+-name 'V0S7_j20080525_transformer'
+
+## General options
+[ident('transformer'); jobmon_ident('transformer')]
+## Inputs
+0< 'odbc1:link1.v'
+## Outputs
+0> [] 'transformer:link2.v'
+1> [] 'transformer:link3.v'
+;
+
+#################################################################
+#### STAGE: output
+## Operator
+export
+## Operator options
+-schema record
+  {final_delim=end, delim=',', quote=double}
+(
+  context:string[32];
+  agent_context:string[64];
+  timestamp:string[26];
+  operation:string[12];
+  tableName:string[64];
+  transactionID:string[24];
+  sequence:string[max=20];
+  journalCode:string[1];
+  entryType:string[2];
+  jobName:string[10];
+  userName:string[10];
+  jobNumber:string[6];
+  programName:string[10];
+  fileName:string[10];
+  libraryName:string[10];
+  memberName:string[10];
+  RRN:string[10];
+  userProfile:string[10];
+  systemName:string[8];
+  referentialConstraint:NULL {quote=none};
+  trigger:NULL {quote=none};
+  objectNameIndicator:string[1];
+  XSMDFL:nullable string[1] {null_field=''};
+  XSRRN#:nullable NULL {quote=none, null_field=''};
+  XSTDFD:nullable string[9] {null_field=''};
+  XSWDAY:nullable NULL {quote=none, null_field=''};
+  XSBCYL:nullable NULL {quote=none, null_field=''};
+  XSTDDT:nullable NULL {quote=none, null_field=''};
+  XSLPDT:nullable NULL {quote=none, null_field=''};
+  XSNPDT:nullable NULL {quote=none, null_field=''};
+  XSADYR:nullable NULL {quote=none, null_field=''};
+  XSEWKD:nullable NULL {quote=none, null_field=''};
+)
+-file '/tmp/AOC_Oracle_Test4'
+-overwrite
+-rejects continue
+
+## General options
+[ident('output'); jobmon_ident('output')]
+## Inputs
+0< 'transformer:link2.v'
+;
+
+#################################################################
+#### STAGE: sort
+## Operator
+tsort
+## Operator options
+-stable
+-key 'tableName'
+-asc
+
+## General options
+[ident('sort'); jobmon_ident('sort')]
+## Inputs
+0< 'transformer:link3.v'
+## Outputs
+0> [modify (
+keep
+  context,tableName;
+)] 'sort:link4.v'
+;
+
+#################################################################
+#### STAGE: rd
+## Operator
+remdup
+## Operator options
+-keep last
+-key 'tableName'
+
+## General options
+[ident('rd'); jobmon_ident('rd')]
+## Inputs
+0< 'sort:link4.v'
+## Outputs
+0> [modify (
+keep
+  context,tableName;
+)] 'rd:link5.v'
+;
+
+#################################################################
+#### STAGE: odbc2
+## Operator
+odbcupsert
+## Operator options
+-db_cs [&DSProjectMapName]
+-data_source 'AOC_Oracle_Test4'
+-user 'orccnus1'
+-password [&__V0S11P1_password]
+-upsertmode update_insert
+-insert 'INSERT 
+INTO 
+table_context 
+(context, tableName) 
+VALUES 
+(ORCHESTRATE.context, ORCHESTRATE.tableName)'
+-update 'UPDATE 
+table_context 
+SET 
+context = ORCHESTRATE.context
+WHERE
+tableName = ORCHESTRATE.tableName '
+
+## General options
+[ident('odbc2'); jobmon_ident('odbc2')]
+## Inputs
+0< 'rd:link5.v'
+;
+
+
+=+=+=+=
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "3"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "0"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S6|V0S7|V0S8|V0S9|V0S10|V0S11"
+      StageXPos "96|264|456|264|264|504"
+      StageYPos "120|120|120|240|360|360"
+      StageTypes "CCustomStage|CTransformerStage|CCustomStage|CCustomStage|CCustomStage|CCustomStage"
+      NextStageID "17"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      ContainerViewSizing "0047 0000 0717 0544 0000 0001 0000 0000"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "rd"
+      NextID "3"
+      InputPins "V0S10P1"
+      OutputPins "V0S10P2"
+      StageType "PxRemDup"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "keep"
+         Value "last"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "key"
+         Value "\(2)\(2)0\(1)\(3)key\(2)tableName\(2)0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Constraint"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link4"
+      Partner "V0S9"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S10P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link5"
+      Partner "V0S11"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link4.context"
+         Group "0"
+         ParsedDerivation "link4.context"
+         SourceColumn "link4.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link4.tableName"
+         Group "0"
+         ParsedDerivation "link4.tableName"
+         SourceColumn "link4.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "420"
+      TopTextPos "384"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S11"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "odbc2"
+      NextID "2"
+      InputPins "V0S11P1"
+      StageType "PxOdbc"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S11P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link5"
+      Partner "V0S10"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "odbcupsert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+         Value "AOC_Oracle_Test4"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+         Value "orccnus1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+         Value "LLI@0JV@L9:>4OFM4;N<3O@G"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertmode"
+         Value "update_insert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertautosql"
+         Value "no"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "insert"
+         Value =+=+=+=
+INSERT 
+INTO 
+table_context 
+(context, tableName) 
+VALUES 
+(ORCHESTRATE.context, ORCHESTRATE.tableName)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "update"
+         Value =+=+=+=
+UPDATE 
+table_context 
+SET 
+context = ORCHESTRATE.context
+WHERE
+tableName = ORCHESTRATE.tableName 
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reject"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "mode"
+         Value "append"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "truncate"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "delete"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S6"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "odbc1"
+      NextID "2"
+      OutputPins "V0S6P1"
+      StageType "PxOdbc"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Constraint"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S6P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link1"
+      Partner "V0S7"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "userquery"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+         Value "AOC_Oracle_Test4"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+         Value "orccnus1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+         Value "LLI@0JV@L9:>4OFM4;N<3O@G"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "query"
+         Value =+=+=+=
+SELECT 
+  context, agent_context, timestamp, operation, tableName, transactionID, sequence, journalCode, entryType, jobName, userName, jobNumber, programName, fileName, libraryName, memberName, RRN, userProfile, systemName, referentialConstraint, trigger, objectNameIndicator, XSMDFL, XSRRN#, XSTDFD, XSWDAY, XSBCYL, XSTDDT, XSLPDT, XSNPDT, XSADYR, XSEWKD
+FROM 
+SSDATEP
+WHERE
+context >
+(
+select context from table_context WHERE 
+tablename = 'DDACMSP'
+)
+=+=+=+=
+      END DSSUBRECORD
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "agent_context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         PadNulls "0"
+         SortingOrder "0"
+         DisplaySize "64"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "agent_context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "timestamp"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "26"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "26"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "timestamp"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "operation"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "12"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "operation"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "transactionID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "transactionID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "sequence"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "20"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "20"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "sequence"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "journalCode"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "1"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "journalCode"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "entryType"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "2"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "entryType"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "jobName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "jobName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "userName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "userName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "jobNumber"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "6"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "6"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "jobNumber"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "programName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "programName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "fileName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "fileName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "libraryName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "libraryName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "memberName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "memberName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RRN"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "RRN"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "userProfile"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "userProfile"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "systemName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "8"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "8"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "systemName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "referentialConstraint"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "4"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "11"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "referentialConstraint"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "trigger"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "4"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "11"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "trigger"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "objectNameIndicator"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "1"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "objectNameIndicator"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSMDFL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSMDFL"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSRRN#"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "13"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "15"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSRRN#"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSTDFD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "9"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "9"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSTDFD"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSWDAY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSWDAY"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSBCYL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSBCYL"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSTDDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSTDDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSLPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSLPDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSNPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSNPDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSADYR"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "5"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSADYR"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSEWKD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         ColumnReference "XSEWKD"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "204"
+      TopTextPos "144"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S7"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTransformerStage"
+      Readonly "0"
+      Name "transformer"
+      NextID "4"
+      InputPins "V0S7P1"
+      OutputPins "V0S7P2|V0S7P3"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxClassName"
+         Value "V0S7_j20080525_transformer"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxGenCode"
+         Value =+=+=+=
+//
+// Generated file to implement the V0S7_repos_transformer transform operator.
+//
+
+// define our input/output link names
+inputname 0 link1;
+outputname 0 link2;
+outputname 1 link3;
+
+initialize {
+	// define our row rejected variable
+	int8 RowRejected0;
+
+	// define our null set variable
+	int8 NullSetVar0;
+
+}
+
+mainloop {
+	// initialise our row rejected variable
+	RowRejected0 = 1;
+
+	// evaluate columns (no constraints) for link: link2
+	writerecord 0;
+	RowRejected0 = 0;
+	// evaluate columns (no constraints) for link: link3
+	writerecord 1;
+	RowRejected0 = 0;
+}
+
+finish {
+}
+
+=+=+=+=
+      END DSSUBRECORD
+      StageType "CTransformerStage"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S7P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxInput"
+      Readonly "0"
+      Name "link1"
+      Partner "V0S6"
+      LinkType "1"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  agent_context:string[64];
+  timestamp:string[26];
+  operation:string[12];
+  tableName:string[64];
+  transactionID:string[24];
+  sequence:string[max=20];
+  journalCode:string[1];
+  entryType:string[2];
+  jobName:string[10];
+  userName:string[10];
+  jobNumber:string[6];
+  programName:string[10];
+  fileName:string[10];
+  libraryName:string[10];
+  memberName:string[10];
+  RRN:string[10];
+  userProfile:string[10];
+  systemName:string[8];
+  referentialConstraint:NULL;
+  trigger:NULL;
+  objectNameIndicator:string[1];
+  XSMDFL:nullable string[1];
+  XSRRN#:nullable NULL;
+  XSTDFD:nullable string[9];
+  XSWDAY:nullable NULL;
+  XSBCYL:nullable NULL;
+  XSTDDT:nullable NULL;
+  XSLPDT:nullable NULL;
+  XSNPDT:nullable NULL;
+  XSADYR:nullable NULL;
+  XSEWKD:nullable NULL;
+)
+=+=+=+=
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S7P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "link2"
+      Partner "V0S8"
+      Reject "0"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link1.context"
+         Group "0"
+         ParsedDerivation "link1.context"
+         SourceColumn "link1.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "agent_context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "64"
+         Derivation "link1.agent_context"
+         Group "0"
+         ParsedDerivation "link1.agent_context"
+         SourceColumn "link1.agent_context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "agent_context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "timestamp"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "26"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "26"
+         Derivation "link1.timestamp"
+         Group "0"
+         ParsedDerivation "link1.timestamp"
+         SourceColumn "link1.timestamp"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "timestamp"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "operation"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "12"
+         Derivation "link1.operation"
+         Group "0"
+         ParsedDerivation "link1.operation"
+         SourceColumn "link1.operation"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "operation"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link1.tableName"
+         Group "0"
+         ParsedDerivation "link1.tableName"
+         SourceColumn "link1.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "transactionID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         Derivation "link1.transactionID"
+         Group "0"
+         ParsedDerivation "link1.transactionID"
+         SourceColumn "link1.transactionID"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "transactionID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "sequence"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "20"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "20"
+         Derivation "link1.sequence"
+         Group "0"
+         ParsedDerivation "link1.sequence"
+         SourceColumn "link1.sequence"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "sequence"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "journalCode"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "1"
+         Derivation "link1.journalCode"
+         Group "0"
+         ParsedDerivation "link1.journalCode"
+         SourceColumn "link1.journalCode"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "journalCode"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "entryType"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "2"
+         Derivation "link1.entryType"
+         Group "0"
+         ParsedDerivation "link1.entryType"
+         SourceColumn "link1.entryType"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "entryType"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "jobName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.jobName"
+         Group "0"
+         ParsedDerivation "link1.jobName"
+         SourceColumn "link1.jobName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "jobName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "userName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.userName"
+         Group "0"
+         ParsedDerivation "link1.userName"
+         SourceColumn "link1.userName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "userName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "jobNumber"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "6"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "6"
+         Derivation "link1.jobNumber"
+         Group "0"
+         ParsedDerivation "link1.jobNumber"
+         SourceColumn "link1.jobNumber"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "jobNumber"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "programName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.programName"
+         Group "0"
+         ParsedDerivation "link1.programName"
+         SourceColumn "link1.programName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "programName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "fileName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.fileName"
+         Group "0"
+         ParsedDerivation "link1.fileName"
+         SourceColumn "link1.fileName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "fileName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "libraryName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.libraryName"
+         Group "0"
+         ParsedDerivation "link1.libraryName"
+         SourceColumn "link1.libraryName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "libraryName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "memberName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.memberName"
+         Group "0"
+         ParsedDerivation "link1.memberName"
+         SourceColumn "link1.memberName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "memberName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RRN"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.RRN"
+         Group "0"
+         ParsedDerivation "link1.RRN"
+         SourceColumn "link1.RRN"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "RRN"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "userProfile"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.userProfile"
+         Group "0"
+         ParsedDerivation "link1.userProfile"
+         SourceColumn "link1.userProfile"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "userProfile"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "systemName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "8"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "8"
+         Derivation "link1.systemName"
+         Group "0"
+         ParsedDerivation "link1.systemName"
+         SourceColumn "link1.systemName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "systemName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "referentialConstraint"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "4"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "11"
+         Derivation "link1.referentialConstraint"
+         Group "0"
+         ParsedDerivation "link1.referentialConstraint"
+         SourceColumn "link1.referentialConstraint"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "referentialConstraint"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "trigger"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "4"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "11"
+         Derivation "link1.trigger"
+         Group "0"
+         ParsedDerivation "link1.trigger"
+         SourceColumn "link1.trigger"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "trigger"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "objectNameIndicator"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "1"
+         Derivation "link1.objectNameIndicator"
+         Group "0"
+         ParsedDerivation "link1.objectNameIndicator"
+         SourceColumn "link1.objectNameIndicator"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "objectNameIndicator"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSMDFL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "1"
+         Derivation "link1.XSMDFL"
+         Group "0"
+         ParsedDerivation "link1.XSMDFL"
+         SourceColumn "link1.XSMDFL"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSMDFL"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSRRN#"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "13"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "15"
+         Derivation "link1.XSRRN#"
+         Group "0"
+         ParsedDerivation "link1.XSRRN#"
+         SourceColumn "link1.XSRRN#"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSRRN#"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSTDFD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "9"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "9"
+         Derivation "link1.XSTDFD"
+         Group "0"
+         ParsedDerivation "link1.XSTDFD"
+         SourceColumn "link1.XSTDFD"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSTDFD"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSWDAY"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         Derivation "link1.XSWDAY"
+         Group "0"
+         ParsedDerivation "link1.XSWDAY"
+         SourceColumn "link1.XSWDAY"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSWDAY"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSBCYL"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         Derivation "link1.XSBCYL"
+         Group "0"
+         ParsedDerivation "link1.XSBCYL"
+         SourceColumn "link1.XSBCYL"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSBCYL"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSTDDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.XSTDDT"
+         Group "0"
+         ParsedDerivation "link1.XSTDDT"
+         SourceColumn "link1.XSTDDT"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSTDDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSLPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.XSLPDT"
+         Group "0"
+         ParsedDerivation "link1.XSLPDT"
+         SourceColumn "link1.XSLPDT"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSLPDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSNPDT"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.XSNPDT"
+         Group "0"
+         ParsedDerivation "link1.XSNPDT"
+         SourceColumn "link1.XSNPDT"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSNPDT"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSADYR"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "3"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "5"
+         Derivation "link1.XSADYR"
+         Group "0"
+         ParsedDerivation "link1.XSADYR"
+         SourceColumn "link1.XSADYR"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSADYR"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XSEWKD"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "2"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "3"
+         Derivation "link1.XSEWKD"
+         Group "0"
+         ParsedDerivation "link1.XSEWKD"
+         SourceColumn "link1.XSEWKD"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.SSDATEP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         ColumnReference "XSEWKD"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         PadChar ""
+         APTFieldProp "quote=none, null_field=''"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  agent_context:string[64];
+  timestamp:string[26];
+  operation:string[12];
+  tableName:string[64];
+  transactionID:string[24];
+  sequence:string[max=20];
+  journalCode:string[1];
+  entryType:string[2];
+  jobName:string[10];
+  userName:string[10];
+  jobNumber:string[6];
+  programName:string[10];
+  fileName:string[10];
+  libraryName:string[10];
+  memberName:string[10];
+  RRN:string[10];
+  userProfile:string[10];
+  systemName:string[8];
+  referentialConstraint:int32;
+  trigger:int32;
+  objectNameIndicator:string[1];
+  DFMDFL:nullable string[1];
+  DFRRN_:nullable decimal[13,0];
+  DFCTCD:nullable string[2];
+  DFGMAB:nullable string[4];
+  DFACB:nullable decimal[3,0];
+  DFACS:nullable decimal[6,0];
+  DFACX:nullable decimal[3,0];
+  DFAPTY:nullable string[3];
+  DFCYCD:nullable string[3];
+  DFDCG:nullable string[4];
+  DFDCB:nullable decimal[3,0];
+  DFDCS:nullable decimal[6,0];
+  DFEBAI:nullable string[4];
+  DFACSN:nullable string[28];
+  DFAC2N:nullable string[28];
+  DFRSTR:nullable string[1];
+  DFTUPI:nullable string[1];
+  DFSTUS:nullable string[1];
+  DFCBST:nullable string[1];
+  DFDTAO:nullable decimal[8,0];
+  DFCBCL:nullable string[3];
+  DFMKS1:nullable decimal[5,0];
+  DFMKP1:nullable decimal[3,0];
+  DFMKS2:nullable decimal[5,0];
+  DFMKP2:nullable decimal[3,0];
+  DFMKS3:nullable decimal[5,0];
+  DFMKP3:nullable decimal[3,0];
+  DFGABS:nullable decimal[5,0];
+  DFGLBS:nullable decimal[5,0];
+  DFCABS:nullable decimal[5,0];
+  DFCLBS:nullable decimal[5,0];
+  DFCBCI:nullable string[1];
+  DFCQRC:nullable string[1];
+  DFTRIN:nullable string[1];
+  DFWSCI:nullable string[1];
+  DFSCCM:nullable string[1];
+  DFISTR:nullable string[1];
+  DFBIOI:nullable string[1];
+  DFSAOG:nullable decimal[3,0];
+  DFBIAB:nullable decimal[3,0];
+  DFBIAS:nullable decimal[6,0];
+  DFBIAX:nullable decimal[3,0];
+  DFNTPD:nullable string[4];
+  DFRLBL:nullable decimal[15,0];
+  DFLLBL:nullable decimal[15,0];
+  DFVLBL:nullable decimal[13,0];
+  DFTTHD:nullable decimal[15,0];
+  DFBLME:nullable decimal[13,0];
+  DFDLTN:nullable decimal[8,0];
+  DFPBBL:nullable decimal[13,0];
+  DFDLPU:nullable decimal[8,0];
+  DFDFBT:nullable decimal[8,0];
+  DFLLID:nullable decimal[8,0];
+  DFBICT:nullable decimal[3,0];
+  DFRTCQ:nullable decimal[3,0];
+  DFRCRC:nullable decimal[3,0];
+  DFRCRT:nullable decimal[13,0];
+  DFRDRC:nullable decimal[3,0];
+  DFRDRT:nullable decimal[13,0];
+  DFRALL:nullable decimal[3,0];
+  DFATMC:nullable string[1];
+  DFATTC:nullable decimal[3,0];
+  DFBSCH:nullable string[1];
+  DFGAT1:nullable string[3];
+  DFGAT2:nullable string[3];
+  DFGHCL:nullable string[3];
+  DFCRGR:nullable string[1];
+  DFCTRS:nullable string[2];
+  DFNATY:nullable string[2];
+  DFGMCI:nullable string[1];
+  DFADRQ:nullable string[1];
+  DFLANG:nullable string[1];
+  DFDPCD:nullable string[1];
+  DFMTCD:nullable string[1];
+  DFCBBK:nullable string[4];
+  DFCBBH:nullable string[4];
+  DFFDXM:nullable string[1];
+  DFCGID:nullable decimal[3,0];
+  DFLSRA:nullable decimal[11,0];
+  DFLCRA:nullable decimal[11,0];
+  DFWTCI:nullable string[1];
+  DFCLVN:nullable decimal[13,0];
+  DFACAI:nullable string[1];
+  DFPLAC:nullable string[1];
+  DFMCB:nullable decimal[3,0];
+  DFMCS:nullable decimal[6,0];
+  DFMCX:nullable decimal[3,0];
+  DFPBLN:nullable decimal[2,0];
+  DFPBPN:nullable decimal[2,0];
+  DFRCLS:nullable string[1];
+  DFDTZB:nullable decimal[8,0];
+  DFCUSR:nullable string[24];
+  DFMNSK:nullable decimal[2,0];
+  DFCQTP:nullable string[3];
+  DFDTAP:nullable decimal[8,0];
+  DFDTSS:nullable decimal[8,0];
+  DFDSEX:nullable decimal[8,0];
+  DFREQN:nullable decimal[3,0];
+  DFCQDP:nullable string[1];
+  DFCGEX:nullable string[1];
+  DFCQID:nullable string[2];
+  DFDYID:nullable string[2];
+  DFCCIN:nullable string[1];
+  DFRDDG:nullable decimal[2,0];
+  DFTTPF:nullable string[1];
+  DFTDCF:nullable string[1];
+  DFTAMF:nullable string[1];
+  DFTCLF:nullable string[1];
+  DFBLCD:nullable string[3];
+  DFBDUP:nullable decimal[8,0];
+  DFTATN:nullable string[1];
+  DFTAEX:nullable string[1];
+  DFDLUP:nullable decimal[8,0];
+  DFTLUP:nullable decimal[6,0];
+  DFVLOC:nullable string[max=200];
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "384"
+      TopTextPos "145"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S7P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "link3"
+      Partner "V0S9"
+      Reject "0"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link1.context"
+         Group "0"
+         ParsedDerivation "link1.context"
+         SourceColumn "link1.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link1.tableName"
+         Group "0"
+         ParsedDerivation "link1.tableName"
+         SourceColumn "link1.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  tableName:string[64];
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "288"
+      TopTextPos "182"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S8"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "output"
+      NextID "2"
+      InputPins "V0S8P1"
+      StageType "PxSequentialFile"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S8P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link2"
+      Partner "V0S7"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "schema"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "file"
+         Value "\(2)\(2)0\(1)\(3)file\(2)/tmp/AOC_Oracle_Test4\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "append\\overwrite"
+         Value "overwrite"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nocleanup"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rejects"
+         Value "continue"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "firstLineColumnNames"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SchemaFormat"
+         Value "final_delim=end, delim=',', quote=double"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S9"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "sort"
+      NextID "3"
+      InputPins "V0S9P1"
+      OutputPins "V0S9P2"
+      StageType "PxSort"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "tsort"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nonStable"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "stable"
+         Value "stable"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "unique"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "stats"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "key"
+         Value "\(2)\(2)0\(1)\(3)key\(2)tableName\(2)0\(1)\(3)\(3)asc\\desc\(2)asc\(2)0\(1)\(3)\(3)sorted\\clustered\(2) \(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "flagCluster"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "flagKey"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S9P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link3"
+      Partner "V0S7"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S9P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link4"
+      Partner "V0S10"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link3.context"
+         Group "0"
+         ParsedDerivation "link3.context"
+         SourceColumn "link3.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link3.tableName"
+         Group "0"
+         ParsedDerivation "link3.tableName"
+         SourceColumn "link3.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\AOC_Oracle_Test4\\public.DDACMSP"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "288"
+      TopTextPos "324"
+   END DSRECORD
+END DSJOB

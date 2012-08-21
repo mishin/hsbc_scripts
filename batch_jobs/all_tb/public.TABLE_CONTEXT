@@ -1,0 +1,53 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\vm2k3\\public.TABLE_CONTEXT"
+      DateModified "2000-05-24"
+      TimeModified "08.50.49"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: vm2k3 / public.TABLE_CONTEXT (as seen from vmrhel) - 5/24/2000 13:48:37
+Type: TABLE
+Owner: public
+Fully-qualified name: "public"."TABLE_CONTEXT"
+Unqualified name: TABLE_CONTEXT
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "64"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"vmrhel\"|SoftwareProduct=\"Attunity Connect Driver\"|DataStore=\"\"|DataSchema(Owner)=\"public\"|DataCollection(Table)=\"TABLE_CONTEXT\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

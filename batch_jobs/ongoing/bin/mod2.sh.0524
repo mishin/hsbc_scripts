@@ -1,0 +1,51 @@
+#!/usr/bin/ksh
+
+. `dirname $0`/env.sh
+
+fn=$rootdir/demo_job/part4.V0S0P1
+
+tn=$1
+
+vi +1 $fn <<EOF
+0/         Name "query"
+/^SELECT
+jddk:r $rootdir/tmp/$tn.f1
+/^FROM
+jC$tn:w
+01G/      Columns
+jma/      MetaBag
+kd'aOPANLMMARKHERE:wq
+EOF
+
+cat $rootdir/tmp/$tn |awk -F'"' '/^  *Identifier/{print$2}' |read fulltn
+
+cat $rootdir/tmp/$tn.filelist |while read file ; do
+cat $rootdir/tmp/$file |awk -F'"' '/^  *Name/{print$2}' |read coln
+  vi +1 $fn <<EOF
+0/PANLMMARKHERE
+k:r $rootdir/tmp/$file
+/DisplaySize
+o         Group "0"
+         SortKey "0"
+         SortType "0"
+         TableDef "$fulltn":s/\\\\/\\\\\\\\/g
+o         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         ColumnReference "$coln"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0":wq
+EOF
+done
+
+vi +1 $fn <<EOF
+0/PANLMMARKHERE
+dd:wq
+EOF
+
+

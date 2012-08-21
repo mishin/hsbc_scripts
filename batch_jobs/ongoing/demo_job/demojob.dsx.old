@@ -1,0 +1,1658 @@
+BEGIN HEADER
+   CharacterSet "CP1252"
+   ExportingTool "Ascential DataStage Export"
+   ToolVersion "4"
+   ServerName "vmrhel"
+   ToolInstanceID "panlm"
+   MDISVersion "1.0"
+   Date "2000-05-24"
+   Time "22.02.08"
+   ServerVersion "7.5.1.A"
+END HEADER
+BEGIN DSJOB
+   Identifier "vm2k3"
+   DateModified "2000-05-24"
+   TimeModified "16.37.24"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "vm2k3"
+      NextID "1"
+      Container "V0"
+      JobVersion "50.0.0"
+      ControlAfterSubr "0"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "IdentList"
+         Value "odbc1|transformer|output|sort|rd|odbc2"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "ClientCodePage"
+         Value "1252"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V0S0P1_password"
+         Value "LD:@1IVH=9:N0FEI=:"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "EncHiddenParam"
+         Name "__V0S5P1_password"
+         Value "LD:@1IVH=9:N0FEI=:"
+      END DSSUBRECORD
+      OrchestrateCode =+=+=+=
+#################################################################
+#### STAGE: odbc1
+## Operator
+odbcread
+## Operator options
+-db_cs [&DSProjectMapName]
+-data_source 'vm2k3'
+-user 'cctool'
+-password [&__V0S0P1_password]
+-query 'SELECT 
+context, agent_context, operation, transactionID, tableName, rowID, timestamp, COL1, COL2 
+FROM 
+cctool_t1
+WHERE context >
+(
+select context from table_context
+WHERE tablename = \\'CCTOOL_T1\\' 
+)'
+-use_strings
+
+## General options
+[ident('odbc1'); jobmon_ident('odbc1')]
+## Outputs
+0> [modify (
+  context:not_nullable string[32]=context;
+  agent_context:not_nullable string[64]=agent_context;
+  operation:not_nullable string[12]=operation;
+  transactionID:not_nullable string[24]=transactionID;
+  tableName:not_nullable string[64]=tableName;
+  rowID:not_nullable string[max=24]=rowID;
+  timestamp:not_nullable string[26]=timestamp;
+  COL1:nullable string[max=10]=COL1;
+  COL2:nullable string[max=10]=COL2;
+keep
+  context,agent_context,operation,transactionID,
+  tableName,rowID,timestamp,COL1,
+  COL2;
+)] 'odbc1:link1.v'
+;
+
+#################################################################
+#### STAGE: transformer
+## Operator
+transform
+## Operator options
+-flag run
+-name 'V0S1_vm2k3_transformer'
+
+## General options
+[ident('transformer'); jobmon_ident('transformer')]
+## Inputs
+0< 'odbc1:link1.v'
+## Outputs
+0> [] 'transformer:link2.v'
+1> [] 'transformer:link3.v'
+;
+
+#################################################################
+#### STAGE: output
+## Operator
+export
+## Operator options
+-schema record
+  {final_delim=end, delim=',', quote=double}
+(
+  context:string[32];
+  agent_context:string[64];
+  operation:string[12];
+  transactionID:string[24];
+  tableName:string[64];
+  rowID:string[max=24];
+  timestamp:string[26];
+  COL1:nullable string[max=10] {null_field=''};
+  COL2:nullable string[max=10] {null_field=''};
+)
+-file '/tmp/vm2k3'
+-overwrite
+-rejects continue
+
+## General options
+[ident('output'); jobmon_ident('output')]
+## Inputs
+0< 'transformer:link2.v'
+;
+
+#################################################################
+#### STAGE: sort
+## Operator
+tsort
+## Operator options
+-stable
+-key 'tableName'
+-asc
+
+## General options
+[ident('sort'); jobmon_ident('sort')]
+## Inputs
+0< 'transformer:link3.v'
+## Outputs
+0> [] 'sort:link4.v'
+;
+
+#################################################################
+#### STAGE: rd
+## Operator
+remdup
+## Operator options
+-keep last
+-key 'tableName'
+
+## General options
+[ident('rd'); jobmon_ident('rd')]
+## Inputs
+0< 'sort:link4.v'
+## Outputs
+0> [modify (
+  tablename=tableName;
+)] 'rd:link5.v'
+;
+
+#################################################################
+#### STAGE: odbc2
+## Operator
+odbcupsert
+## Operator options
+-db_cs [&DSProjectMapName]
+-data_source 'vm2k3'
+-user 'cctool'
+-password [&__V0S5P1_password]
+-upsertmode update_insert
+-insert 'INSERT 
+INTO 
+table_context 
+(context, tablename) 
+VALUES 
+(ORCHESTRATE.context, ORCHESTRATE.tablename)'
+-update 'UPDATE 
+table_context 
+SET 
+context = ORCHESTRATE.context WHERE 
+tablename = ORCHESTRATE.tablename 
+'
+
+## General options
+[ident('odbc2'); jobmon_ident('odbc2')]
+## Inputs
+0< 'rd:link5.v'
+;
+
+
+=+=+=+=
+      IsTemplate "0"
+      JobType "3"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "1"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      CopyLibPrefix "ARDT"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S1|V0S2|V0S3|V0S4|V0S5"
+      StageXPos "120|312|528|312|312|552"
+      StageYPos "168|168|168|312|456|456"
+      StageTypes "CCustomStage|CTransformerStage|CCustomStage|CCustomStage|CCustomStage|CCustomStage"
+      NextStageID "11"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|48|48|48|48"
+      StageYSize "48|48|48|48|48|48"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      ContainerViewSizing "0057 0050 0676 0499 0000 0001 0000 0120"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "odbc1"
+      NextID "2"
+      OutputPins "V0S0P1"
+      StageType "PxOdbc"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link1"
+      Partner "V0S1"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "selection"
+         Value "userquery"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+         Value "vm2k3"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+         Value "cctool"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+         Value "LD:@1IVH=9:N0FEI=:"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "query"
+         Value =+=+=+=
+SELECT 
+context, agent_context, operation, transactionID, tableName, rowID, timestamp, COL1, COL2 
+FROM 
+cctool_t1
+WHERE context >
+(
+select context from table_context
+WHERE tablename = 'CCTOOL_T1' 
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Value "\(2)\(2)0"
+      END DSSUBRECORD
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "agent_context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "64"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "agent_context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "operation"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "12"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "operation"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "transactionID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "transactionID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rowID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "rowID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "timestamp"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "26"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "26"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "timestamp"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "COL1"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         LevelNo "0"
+         Occurs "0"
+         SignOption "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "COL2"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "230"
+      TopTextPos "198"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTransformerStage"
+      Readonly "0"
+      Name "transformer"
+      NextID "4"
+      InputPins "V0S1P1"
+      OutputPins "V0S1P2|V0S1P3"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxClassName"
+         Value "V0S1_vm2k3_transformer"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TrxGenCode"
+         Value =+=+=+=
+//
+// Generated file to implement the V0S1_repos_transformer transform operator.
+//
+
+// define our input/output link names
+inputname 0 link1;
+outputname 0 link2;
+outputname 1 link3;
+
+initialize {
+	// define our row rejected variable
+	int8 RowRejected0;
+
+	// define our null set variable
+	int8 NullSetVar0;
+
+	// declare our intermediate variables for this section
+	string InterVar0_0;
+	string InterVar0_1;
+
+	// initialise constant values which require conversion
+	InterVar0_0 = ".";
+	InterVar0_1 = "_";
+}
+
+mainloop {
+	// initialise our row rejected variable
+	RowRejected0 = 1;
+
+	// evaluate columns (no constraints) for link: link2
+	writerecord 0;
+	RowRejected0 = 0;
+	// evaluate columns (no constraints) for link: link3
+	link3.tableName = replace_substring(InterVar0_0 , InterVar0_1 , link1.tableName);
+	writerecord 1;
+	RowRejected0 = 0;
+}
+
+finish {
+}
+
+=+=+=+=
+      END DSSUBRECORD
+      StageType "CTransformerStage"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxInput"
+      Readonly "0"
+      Name "link1"
+      Partner "V0S0"
+      LinkType "1"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  agent_context:string[64];
+  operation:string[12];
+  transactionID:string[24];
+  tableName:string[64];
+  rowID:string[max=24];
+  timestamp:string[26];
+  COL1:nullable string[max=10];
+  COL2:nullable string[max=10];
+)
+=+=+=+=
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "link2"
+      Partner "V0S2"
+      Reject "0"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link1.context"
+         Group "0"
+         ParsedDerivation "link1.context"
+         SourceColumn "link1.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "agent_context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "64"
+         Derivation "link1.agent_context"
+         Group "0"
+         ParsedDerivation "link1.agent_context"
+         SourceColumn "link1.agent_context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "agent_context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "operation"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "12"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "12"
+         Derivation "link1.operation"
+         Group "0"
+         ParsedDerivation "link1.operation"
+         SourceColumn "link1.operation"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "operation"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "transactionID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         Derivation "link1.transactionID"
+         Group "0"
+         ParsedDerivation "link1.transactionID"
+         SourceColumn "link1.transactionID"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "transactionID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link1.tableName"
+         Group "0"
+         ParsedDerivation "link1.tableName"
+         SourceColumn "link1.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rowID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "24"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "24"
+         Derivation "link1.rowID"
+         Group "0"
+         ParsedDerivation "link1.rowID"
+         SourceColumn "link1.rowID"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "rowID"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "timestamp"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "26"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "26"
+         Derivation "link1.timestamp"
+         Group "0"
+         ParsedDerivation "link1.timestamp"
+         SourceColumn "link1.timestamp"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "timestamp"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL1"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.COL1"
+         Group "0"
+         ParsedDerivation "link1.COL1"
+         SourceColumn "link1.COL1"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "COL1"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "COL2"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "10"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "10"
+         Derivation "link1.COL2"
+         Group "0"
+         ParsedDerivation "link1.COL2"
+         SourceColumn "link1.COL2"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "COL2"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  agent_context:string[64];
+  operation:string[12];
+  transactionID:string[24];
+  tableName:string[64];
+  rowID:string[max=24];
+  timestamp:string[26];
+  COL1:nullable string[max=10];
+  COL2:nullable string[max=10];
+  outRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "444"
+      TopTextPos "192"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S1P3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CTrxOutput"
+      Readonly "0"
+      Name "link3"
+      Partner "V0S3"
+      Reject "0"
+      RowLimit "0"
+      RoutineTransforms "\(1B)"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link1.context"
+         Group "0"
+         ParsedDerivation "link1.context"
+         SourceColumn "link1.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "Convert('.','_',link1.tableName)"
+         Group "0"
+         ParsedDerivation "Convert('.', '_', link1.tableName)"
+         SourceColumn "link1.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Schema"
+         Value =+=+=+=
+record
+(
+  context:string[32];
+  tableName:string[64];
+  outRec:*;
+)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "336"
+      TopTextPos "262"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "output"
+      NextID "2"
+      InputPins "V0S2P1"
+      StageType "PxSequentialFile"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S2P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link2"
+      Partner "V0S1"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "schema"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "file"
+         Value "\(2)\(2)0\(1)\(3)file\(2)/tmp/vm2k3\(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "append\\overwrite"
+         Value "overwrite"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nocleanup"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "rejects"
+         Value "continue"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "firstLineColumnNames"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SchemaFormat"
+         Value "final_delim=end, delim=',', quote=double"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "sort"
+      NextID "3"
+      InputPins "V0S3P1"
+      OutputPins "V0S3P2"
+      StageType "PxSort"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "tsort"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "nonStable"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "stable"
+         Value "stable"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "unique"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "stats"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "key"
+         Value "\(2)\(2)0\(1)\(3)key\(2)tableName\(2)0\(1)\(3)\(3)asc\\desc\(2)asc\(2)0\(1)\(3)\(3)sorted\\clustered\(2) \(2)0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "flagCluster"
+         Value " "
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "flagKey"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link3"
+      Partner "V0S1"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S3P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link4"
+      Partner "V0S4"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "32"
+         Derivation "link3.context"
+         Group "0"
+         ParsedDerivation "link3.context"
+         SourceColumn "link3.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tableName"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link3.tableName"
+         Group "0"
+         ParsedDerivation "link3.tableName"
+         SourceColumn "link3.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.CCTOOL_T1"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tableName"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "342"
+      TopTextPos "402"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S4"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "rd"
+      NextID "3"
+      InputPins "V0S4P1"
+      OutputPins "V0S4P2"
+      StageType "PxRemDup"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "keep"
+         Value "last"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "key"
+         Value "\(2)\(2)0\(1)\(3)key\(2)tableName\(2)0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Constraint"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S4P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link4"
+      Partner "V0S3"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S4P2"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "link5"
+      Partner "V0S5"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "context"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "32"
+         Derivation "link4.context"
+         Group "0"
+         ParsedDerivation "link4.context"
+         SourceColumn "link4.context"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.TABLE_CONTEXT"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "context"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "tablename"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "64"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "64"
+         Derivation "link4.tableName"
+         Group "0"
+         ParsedDerivation "link4.tableName"
+         SourceColumn "link4.tableName"
+         SortKey "0"
+         SortType "0"
+         TableDef "ODBC\\vm2k3\\public.TABLE_CONTEXT"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         SyncIndicator "0"
+         PadChar ""
+         ColumnReference "tablename"
+         APTFieldProp "null_field=''"
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufMode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "456"
+      TopTextPos "480"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "odbc2"
+      NextID "2"
+      InputPins "V0S5P1"
+      StageType "PxOdbc"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "db_cs"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Execmode"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "Preserve"
+      END DSSUBRECORD
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S5P1"
+      DateModified "1899-12-30"
+      TimeModified "00.00.01"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "link5"
+      Partner "V0S4"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "operator"
+         Value "odbcupsert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "data_source"
+         Value "vm2k3"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "user"
+         Value "cctool"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "password"
+         Value "LD:@1IVH=9:N0FEI=:"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertmode"
+         Value "update_insert"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "upsertautosql"
+         Value "no"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "insert"
+         Value =+=+=+=
+INSERT 
+INTO 
+table_context 
+(context, tablename) 
+VALUES 
+(ORCHESTRATE.context, ORCHESTRATE.tablename)
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "update"
+         Value =+=+=+=
+UPDATE 
+table_context 
+SET 
+context = ORCHESTRATE.context WHERE 
+tablename = ORCHESTRATE.tablename 
+
+=+=+=+=
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "reject"
+         Value " "
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "1"
+      END DSSUBRECORD
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+   END DSRECORD
+END DSJOB

@@ -1,0 +1,97 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\ora\\CCTOOL.COLLECTION"
+      DateModified "2000-05-19"
+      TimeModified "21.41.30"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: ora / CCTOOL.COLLECTION (as seen from vmrhel) - 5/19/2008 11:15:20 PM
+Type: TABLE
+Owner: CCTOOL
+Fully-qualified name: "CCTOOL"."COLLECTION"
+Unqualified name: COLLECTION
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "CCID"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "8"
+         Precision "15"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "1"
+         DisplaySize "22"
+         PadChar ""
+         APTFieldProp "quote=none"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "TIMESTAMP"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "11"
+         Precision "19"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "19"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "APP_NAME"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "20"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "20"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "APP_TYPE"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "50"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "50"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "HOSTNAME"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "12"
+         Precision "20"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "20"
+         PadChar ""
+         APTFieldProp "null_field=''"
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"ora\"|SoftwareProduct=\"Oracle\"|DataStore(Database)=\"\"|DataSchema(User Name)=\"CCTOOL\"|DataCollection(Table)=\"COLLECTION\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

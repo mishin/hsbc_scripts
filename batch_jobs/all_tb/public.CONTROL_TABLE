@@ -1,0 +1,51 @@
+   BEGIN DSRECORD
+      Identifier "ODBC\\vm2k3\\public.CONTROL_TABLE"
+      DateModified "2000-05-24"
+      TimeModified "08.34.10"
+      OLEType "CMetaTable"
+      Readonly "0"
+      Description =+=+=+=
+Imported from: vm2k3 / public.CONTROL_TABLE (as seen from vmrhel) - 5/24/2000 13:30:02
+Type: TABLE
+Owner: public
+Fully-qualified name: "public"."CONTROL_TABLE"
+Unqualified name: CONTROL_TABLE
+=+=+=+=
+      Version "8"
+      NLSMapName "ISO8859-1"
+      QuoteChar "\""
+      Columns "CMetaColumn"
+      BEGIN DSSUBRECORD
+         Name "action"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "32"
+         PadChar ""
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "node_id"
+         Description =+=+=+=
+<none>
+Searchable? N 
+=+=+=+=
+         SqlType "1"
+         Precision "2"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "2"
+         PadChar ""
+      END DSSUBRECORD
+      SEQ-Delimiter ","
+      SEQ-QuoteChar "\""
+      Locator "TableType=\"ODBC 3.0\"|Computer=\"vmrhel\"|SoftwareProduct=\"Attunity Connect Driver\"|DataStore=\"\"|DataSchema(Owner)=\"public\"|DataCollection(Table)=\"CONTROL_TABLE\""
+      PadChar ""
+      APTRecordProp "record_delim='\\n', delim=',', final_delim=end, quote=double"
+   END DSRECORD

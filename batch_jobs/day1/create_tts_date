@@ -1,0 +1,3 @@
+sed -i '/Category/s/Day1/Ongoing_Date/' *
+sed -i '/Identifier "Day1_/s/Day1_/Date_/' *
+sed -i '/^  *Name "Day1_/s/Day1_/Date_/' *

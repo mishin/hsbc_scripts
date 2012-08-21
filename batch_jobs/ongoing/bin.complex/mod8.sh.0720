@@ -1,0 +1,50 @@
+#!/usr/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -eq 0 ]; then
+  exit
+fi
+
+cat $rootdir/demo_job/seqlist |awk '{print $8}' |read fn
+fn=$rootdir/demo_job/$fn
+
+tn=$1
+
+if [ $tts -eq 1 ]; then
+  # for tts tables
+  solu=`cat $rootdir/etc/tts |grep ",${tn}," |awk -F',' '{print $4}'`
+  if [ "x" == "x$solu" ]; then
+    solu=UNKNOWNLIB
+  fi
+  $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""$solu":wq
+EOF
+
+else
+  # for hub tables
+  echo $tn |cut -c1 |read h
+  case $h in 
+  [A-G]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST13_SA":wq
+EOF
+  ;;
+  [H-I]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST15_SA":wq
+:wq
+EOF
+  ;;
+  [L-Z]) $VI +1 $fn <<EOF
+0/^  *Name "data_source"
+jf"cf""AOC_ORACLE_TEST12_SA":wq
+:wq
+EOF
+  ;;
+  esac
+
+fi
+
+
