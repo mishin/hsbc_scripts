@@ -1,0 +1,69 @@
+#!/usr/bin/ksh
+
+#./ftp.sh
+
+rootdir=/sybiq/script
+# datadir= data source
+# loaddir= load sql source
+# workdir= working dir
+# donedir= data loaded successfully
+# faildir= data loaded failed
+datadir=$rootdir/data
+loaddir=$rootdir/load
+workdir=$rootdir/work
+donedir=$rootdir/done
+faildir=$rootdir/fail
+
+for i in $datadir/*.TXT ; do
+#for i in $datadir/AFASMJP.TXT ; do
+filename=${i##*/}
+filename=${filename%.*}
+echo $filename |awk -F'.' '{print $1" "$2}' |read tablename timestamp
+
+mv $datadir/$filename.TXT $workdir
+cp $loaddir/$tablename.sql $workdir/$filename.sql 2>/dev/null
+vi $workdir/$filename.sql >/dev/null <<EOF
+1GOset option public.conversion_error='off';
+:%s/|/#!/
+Gddf'lC:wq
+EOF
+
+cat >>$workdir/$filename.sql <<EOF
+' ) from '$workdir/$filename.TXT'
+escapes off
+quotes off
+strip on
+-- IGNORE CONSTRAINT ALL 0
+MESSAGE LOG '$workdir/$filename.msg.log' ROW LOG '$workdir/$filename.row.log' ONLY LOG ALL
+LOG DELIMITED BY '|'
+go
+EOF
+
+isql -U hsbc -P hsbc -S hsbcdw -D hsbcdw -o $workdir/$filename.out -i $workdir/$filename.sql
+#isql -U DBA -P SQL -S hsbcdw -D hsbcdw -o $workdir/$filename.out -i $workdir/$filename.sql
+#dbisql -q -nogui -c "uid=DBA;pwd=SQL;eng=hsbcdw" read $workdir/$tablename.sql
+
+# count datafile lines
+wc -l $workdir/$filename.TXT |read a b
+
+cat $workdir/$filename.out |grep affected |sed 's/[()]//g' |read c d
+if [ "x$c" = "x" ]; then
+  c=0
+fi
+if [ $a -eq $c ]; then
+  echo "file:$i is done. ($c/$a rows affected)"
+  mv $workdir/$filename.TXT $donedir
+  mv $workdir/$filename.sql $donedir
+  mv $workdir/$filename.msg.log $donedir
+  mv $workdir/$filename.row.log $donedir
+  mv $workdir/$filename.out $donedir
+else
+  echo "file:$i is failed. ($c/$a rows affected)"
+  mv $workdir/$filename.TXT $faildir
+  mv $workdir/$filename.sql $faildir
+  mv $workdir/$filename.msg.log $faildir
+  mv $workdir/$filename.row.log $faildir
+  mv $workdir/$filename.out $faildir
+fi
+
+done

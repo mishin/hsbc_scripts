@@ -1,0 +1,22 @@
+#!/usr/bin/ksh
+
+lcd=/sybiq/script/ftptmp
+data=/sybiq/script/data
+ts=`date +%m%d%H%M`
+
+
+ftp -vin <<EOF
+open localhost
+user sybiq pxtpq67j
+bin
+cd /sybiq/script/ftp
+prompt
+lcd $lcd
+mget test1.TXT
+bye
+EOF
+
+cd $lcd
+for i in *.TXT ; do
+mv $i $data/${i%.*}.$ts.TXT
+done

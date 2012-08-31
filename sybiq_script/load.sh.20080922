@@ -1,0 +1,187 @@
+#!/usr/bin/ksh
+
+. /sybiq/SYBASE.sh
+
+if [ $# -lt 2 ]; then
+  echo
+  echo "Usage: $0 [ day1 | ongoing | ondate ] datafile_name"
+  echo "       $0 [ ttsday1 | ttsongoing | ttsondate ] datafile_name"
+  echo
+  exit
+fi
+
+rootdir=/sybiq/script
+# datadir= data source
+# loaddir= load sql source
+# workdir= working dir
+# donedir= data loaded successfully
+# faildir= data loaded failed
+workdir=$rootdir/work
+
+type=$1
+case $type in 
+day1|ondate)
+  datadir=$rootdir/data_$type
+  loaddir=$rootdir/load
+  donedir=$rootdir/done_$type
+  faildir=$rootdir/fail_$type
+;;
+ongoing|ttsongoing)
+  datadir=$rootdir/data_$type
+  loaddir=$rootdir/load_ongoing
+  donedir=$rootdir/done_$type
+  faildir=$rootdir/fail_$type
+;;
+ttsday1|ttsondate)
+  datadir=$rootdir/data_$type
+  loaddir=$rootdir/load_tts
+  donedir=$rootdir/done_$type
+  faildir=$rootdir/fail_$type
+;;
+esac
+
+ls $datadir/$2 >/dev/null 2>/dev/null
+if [ $? -ne 0 ]; then
+  echo "no files in data_$type"
+  exit
+fi
+
+for i in $datadir/$2 ; do
+filename=${i##*/}
+filename=${filename%.*}
+echo $filename |awk -F'.' '{print $1" "$2}' |read tablename timestamp
+
+mv $datadir/$filename.TXT $workdir/$filename.TXT.orig
+
+# drop ^@ string
+sed -n '1,$p' $workdir/$filename.TXT.orig > $workdir/$filename.TXT
+
+cat $loaddir/$tablename.sql 2>/dev/null |expand >$workdir/$filename.sql
+echo "set option public.conversion_error='off';" >$workdir/$$.sql
+awk 'END {print NR}' $workdir/$filename.sql |read linenum
+delimitstr="#!#"
+head -1 $workdir/$filename.sql >>$workdir/$$.sql
+cat >>$workdir/$$.sql <<EOF
+TSTIMESTAMP '$delimitstr',
+EOF
+cat $rootdir/lastfield.conf |grep -wq "$tablename"
+if [ $? -eq 0 ]; then
+  cat $workdir/$filename.sql |sed -n "2,$((linenum-1))"p |sed -e "s/|/$delimitstr/" -e 's/\\x0a/#!\
+/' >>$workdir/$$.sql
+else
+  cat $workdir/$filename.sql |sed -n "2,$((linenum-1))"p |sed -e "s/|/$delimitstr/" -e 's/\\x0a/\
+/' >>$workdir/$$.sql
+fi
+mv -f $workdir/$$.sql $workdir/$filename.sql
+
+case $type in
+day1)
+             :
+;;
+ongoing)
+             cat $workdir/$filename.sql |sed '4,25s/null ,$/,/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+;;
+ondate)
+             #cat -n $workdir/$filename.sql |grep -iE "load  *table  *" |awk '{print $1" "$4}' |read ln tn
+             #cat $workdir/$filename.sql |sed -n "1,$((ln-1))"p > $workdir/$$.sql
+             #echo "load table ${tn}_o (" >>$workdir/$$.sql
+             #cat $workdir/$filename.sql |sed -n "$((ln+1)),\$"p >> $workdir/$$.sql
+             #mv -f $workdir/$$.sql $workdir/$filename.sql
+             cat $workdir/$filename.sql |sed '/[Ll][Oo][Aa][Dd]  *[Tt][Aa][Bb][Ll][Ee]/s/\([^ ][^ ]*\)\(  *(\)/\1_o\2/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+;;
+ttsday1)
+             cat $workdir/$filename.sql |sed '/[Ll][Oo][Aa][Dd]  *[Tt][Aa][Bb][Ll][Ee]/s/\([^ ][^ ]*\)\(  *(\)/TTS_\1\2/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+;;
+ttsongoing)
+             cat $workdir/$filename.sql |sed '4,25s/null ,$/,/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+             cat $workdir/$filename.sql |sed '/[Ll][Oo][Aa][Dd]  *[Tt][Aa][Bb][Ll][Ee]/s/\([^ ][^ ]*\)\(  *(\)/TTS_\1\2/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+;;
+ttsondate)
+             cat $workdir/$filename.sql |sed '/[Ll][Oo][Aa][Dd]  *[Tt][Aa][Bb][Ll][Ee]/s/\([^ ][^ ]*\)\(  *(\)/TTS_\1_o\2/' >$workdir/$$.sql
+             mv -f $workdir/$$.sql $workdir/$filename.sql
+;;
+esac
+
+### ignore unknown code, drop unknow code line
+
+cat $rootdir/ignore_row.conf |grep -qw "$tablename"
+if [ $? -eq 0 ]; then
+  rem=""
+else
+  rem="--"
+fi
+
+cat >>$workdir/$filename.sql <<EOF
+from '$workdir/$filename.TXT'
+escapes off
+quotes off
+strip on
+$rem IGNORE CONSTRAINT ALL 0
+MESSAGE LOG '$workdir/$filename.msg.log' ROW LOG '$workdir/$filename.row.log' ONLY LOG ALL
+LOG DELIMITED BY '#!#'
+go
+EOF
+
+### solve ting problem
+### delete half of ting and dont change unix return to a dos return
+
+awk '{gsub("\302\043\041","\043\041",$0)
+if($0~/$/){
+  gsub("","",$0)
+  printf"%s\r\n",$0
+} else
+print $0
+}' $workdir/$filename.TXT >$workdir/$$
+mv $workdir/$$ $workdir/$filename.TXT
+
+### @ in columns
+
+cat $workdir/$filename.sql |grep -q "^@"
+if [ $? -eq 0 ]; then
+  cat $workdir/$filename.sql |sed 's/^\(@[^ ][^ ]*\) /[\1] /' >$workdir/$$.sql
+  mv -f $workdir/$$.sql $workdir/$filename.sql
+fi
+
+### bigint
+
+cat $rootdir/bigint.conf |grep -v ^# |grep -q "$tablename"
+if [ $? -eq 0 ]; then
+  mv $workdir/$filename.TXT $workdir/$filename.TXT.bigint
+  sed 's/-9999999999999999999/-999999999999999999/g' $workdir/$filename.TXT.bigint >$workdir/$filename.TXT
+fi
+
+### load
+
+isql -U hsbc -P hsbc -S hsbcdw -D hsbcdw -o $workdir/$filename.out -i $workdir/$filename.sql
+#isql -U DBA -P SQL -S hsbcdw -D hsbcdw -o $workdir/$filename.out -i $workdir/$filename.sql
+#dbisql -q -nogui -c "uid=DBA;pwd=SQL;eng=hsbcdw" read $workdir/$tablename.sql
+
+cat $workdir/$filename.out |grep affected |sed 's/[()]//g' |read c d
+if [ "x$c" = "x" ]; then
+  c=0
+fi
+if [ $c -ne 0 ]; then
+  echo "${i%%.*},successful,$c"
+  mv $workdir/$filename.TXT* $donedir 2>/dev/null
+  mv $workdir/$filename.sql $donedir 2>/dev/null
+  mv $workdir/$filename.msg.log $donedir 2>/dev/null
+  mv $workdir/$filename.row.log $donedir 2>/dev/null
+  mv $workdir/$filename.out $donedir 2>/dev/null
+  #$rootdir/ftp.sh done $filename
+else
+  echo "${i%%.*},failed,$c"
+  mv $workdir/$filename.TXT* $faildir 2>/dev/null
+  mv $workdir/$filename.sql $faildir 2>/dev/null
+  mv $workdir/$filename.msg.log $faildir 2>/dev/null
+  mv $workdir/$filename.row.log $faildir 2>/dev/null
+  mv $workdir/$filename.out $faildir 2>/dev/null
+  #$rootdir/ftp.sh fail $filename
+fi
+
+done
+

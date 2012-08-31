@@ -1,0 +1,8 @@
+#!/bin/ksh
+
+cd create_o
+for i in *.sql ; do
+cat $i |sed -n '1,24p' >$i.new
+cat $i |sed -n '25,$p' |sed 's/,$/null ,/' >>$i.new
+mv $i.new $i
+done
