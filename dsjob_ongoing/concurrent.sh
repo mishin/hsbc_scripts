@@ -1,0 +1,171 @@
+#!/usr/bin/ksh
+
+. `dirname $0`/env.sh
+
+datestamp=`date +"%Y%m%d%H%M%S"`
+dateStr=`date +"%Y%m%d"`
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: $0 [joblist_file] "
+  exit 9
+fi
+#
+# Ignore date 
+#
+#cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
+#if [ $? -eq 0 ];then
+#  echo "ignore $dateStr"
+#  $sendmesg "$dateStr today will be ignored" 
+#  exit 9
+#fi
+
+joblist=$1
+
+#if [ "X$joblist" == "X" ];then
+#  joblist=hubttsall.lst 
+#fi
+
+if [[ ! -f $rootdir/$joblist ]];then
+  echo "joblist:$rootdir/$joblist is not exist"
+  logger -t root "ORC1101X : DSJOB ERROR , $joblist is not exist" 
+  $sendmesg "ORC1101X : DSJOB ERROR , $joblist is not exist" 
+  exit 9
+fi
+
+# Redirect standard output and standard error to log file
+OUT=${rootdir}/log/dslog/${joblist%%.*}.${datestamp}.dslog
+exec 1>> ${OUT} 2>&1
+chmod 666 ${OUT}
+
+cat $rootdir/maxjobs |read max
+pid=$rootdir/pid.$$
+>$pid
+
+trap '
+echo i am exiting ...
+kill -USR1 `cat $rootdir/pid.$$ |xargs`
+EXIT=1
+' INT TERM
+
+# backup the context file : HUBlastcontext & TTSlastcontext
+cp ${rootdir}/savedata/HUBlastcontext ${rootdir}/savedata/HUBlastcontext.${datestamp} || ( \
+  echo "ERROR : copy HUBlastcontext "
+  logger -t root "ORC1102X : DSJOB ERROR ,copy HUBlastcontext "
+  $sendmesg "ORC1102X : DSJOB ERROR ,copy HUBlastcontext "
+  exit 9 )
+cp ${rootdir}/savedata/TTSlastcontext ${rootdir}/savedata/TTSlastcontext.${datestamp} || ( \
+  echo "ERROR : copy TTSlastcontext "
+  logger -t root "ORC1103X : DSJOB ERROR ,copy TTSlastcontext "
+  $sendmesg "ORC1103X : DSJOB ERROR ,copy TTSlastcontext "
+  exit 9 )
+cp ${rootdir}/savedata/HUBlastdate ${rootdir}/savedata/HUBlastdate.${datestamp} || ( \
+  echo "ERROR : copy HUBlastdate "
+  logger -t root "ORC1104X : DSJOB ERROR ,copy HUBlastdate "
+  $sendmesg "ORC1104X : DSJOB ERROR ,copy HUBlastdate "
+  exit 9 )
+cp ${rootdir}/savedata/TTSlastdate ${rootdir}/savedata/TTSlastdate.${datestamp} || ( \
+  echo "ERROR : copy TTSlastdate "
+  logger -t root "ORC1105X : DSJOB ERROR ,copy TTSlastdate "
+  $sendmesg "ORC1105X : DSJOB ERROR ,copy TTSlastdate "
+  exit 9 )
+
+
+hubdatabase=B001
+hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
+hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
+export hubdatabase hubuser hubpass
+
+ttsdatabase=U17SYS
+ttsuser=`/hsbc/orc/data/encrypt/getuid.sh tts.key tts.uid`
+ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
+export ttsdatabase ttsuser ttspass
+
+DB2CODEPAGE=1208;export DB2CODEPAGE
+. /home/sds01pc/sds01pc1/sqllib/db2profile
+
+#get currentlastbatch
+db2 rollback >/dev/null
+db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
+    head -4 |tail -1 |read currentlastbatch
+export currentlastbatch
+
+echo "currentlastbatch : $currentlastbatch"
+# get currentSSSHWCUTOF : dbname=A001 
+hubdatabase2=A001
+db2 rollback >/dev/null
+db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
+db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
+    head -4 |tail -1 |read currentSSSHWCUTOF
+export hubdatabase2 currentSSSHWCUTOF
+
+echo "currentSSSHWCUTOF: $currentSSSHWCUTOF"
+
+#
+# exit when batch is running
+#
+lastlastbatch="0001-01-01-00.00.00.000000"
+echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
+echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
+if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
+  echo "batch is running"
+  #logger -t root "ORC1003X : the batch is running now" 
+  $sendmesg "ORC1003X : the batch is running now" 
+  exit 9
+fi
+#
+# judge the count of currentlastbatch and currentSSSHWCUTOF 
+# default=21
+#
+echo $currentlastbatch|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read batchCount
+echo $currentSSSHWCUTOF|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
+if [ $batchCount -ne 21 ] || [ $SSSHWCUTOFCount -ne 21 ];then
+  echo "get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+  #logger -t root "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+  $sendmesg "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+  exit 9
+fi 
+ 
+
+EXIT=0
+cat $rootdir/$joblist |while read project name ; do
+  cat $pid |wc -l |read curr
+  cat $rootdir/maxjobs |read max
+  if [ $curr -ge $max ]; then
+    while true ; do
+      if [ $EXIT -eq 1 ]; then
+        break 99
+      fi
+      cat $pid |while read p ; do
+        ps -p $p >/dev/null
+        if [ $? -eq 1 ]; then
+          cat $pid |grep -vw $p > $$
+          mv -f $$ $pid
+          break 2
+        fi
+        #cat $pid |xargs
+      done
+      sleep 2
+    done
+  fi
+  $rootdir/dsjob_sche.sh $project $name &
+  sleep 1
+  echo $! >>$pid
+done
+
+wait
+
+if [ $EXIT -eq 0 ];then
+  df -Pk /hsbc/orc/data |tail -1 |awk '{print$5}'|tr -d '%'|read currSpace
+  if [ $currSpace -lt 98 ];then
+        :
+    #cat $rootdir/$joblist |grep -qw "dpr_orc_prd2" && >$dir/data_ongoing.flag && >$dir/data_ondate.flag
+    #cat $rootdir/$joblist |grep -qw "dpr_orc_prd3" && >$dir/data_ttsongoing.flag && >$dir/data_ttsondate.flag
+  else 
+    echo "ORC1111X:Space Waring:There is not enough space in the file system.check /hsbc/orc/data"
+    logger -t root "ORC1111X:Space Warning:There is not enough space in the file system.check /hsbc/orc/data"
+    $sendmesg "ORC1111X:Space Waring:There is not enough space in the file system.please check /hsbc/orc/data"
+  fi
+fi
+
+rm -f $pid
