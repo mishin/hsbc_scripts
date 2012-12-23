@@ -84,17 +84,17 @@ tn=$2
 
 # source db2 profile
 export DB2CODEPAGE=1208
-. /home/sds01pc/sds01pc1/sqllib/db2profile
+. /home/sds01pc/sds01pc2/sqllib/db2profile
 
 # get user/pass if it is null
 if [ -z "$hubdatabase" ]; then
-    hubdatabase=B001
+    hubdatabase=PAP101D
     hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
     hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
 fi
 
 if [ -z "$ttsdatabase" ]; then
-    ttsdatabase=N11SYS
+    ttsdatabase=U17SYS
     ttsuser=`/hsbc/orc/data/encrypt/getuid.sh tts.key tts.uid`
     ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
 fi
@@ -125,6 +125,7 @@ dpr_orc_prd2)
     gettypename |read type
     if [ "x$type" == "x" ]; then
         echo "type not found"
+	logger -t root "ORC1001X : DSJOB ERROR,$tn type not found!"
         exit 9
     fi
     echo djpEXT$type$tn |sed 's/[#@]/_/g' |read job
@@ -170,14 +171,14 @@ fi
 
 dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |read first
 
-
+hubdatabase2=PAP101A
 # get tddt lpdt
 if [ $istts -eq 1 ]; then
     db2 connect to $ttsdatabase user $ttsuser using $ttspass >/dev/null
     db2 "select XSLPDT,XSTDDT from AOCHSSFP.ssdatep " |\
         head -4 |tail -1 |read lpdt tddt
 else
-    db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+    db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
     db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
         head -4 |tail -1 |read lpdt tddt
 fi
@@ -192,10 +193,10 @@ if [ $? -eq 0 ]; then
     exit 9
 fi
 
-echo $lpdt |tr -d '[A-z]' |tr -d ' '|wc -ck |read lpdtCount
-echo $tddt |tr -d '[A-z]' |tr -d ' '|wc -ck |read tddtCount
+echo $lpdt |tr -d '[A-Z]'|tr -d '[a-z]' |tr -d ' '|wc -ck |read lpdtCount
+echo $tddt |tr -d '[A-Z]'|tr -d '[a-z]' |tr -d ' '|wc -ck |read tddtCount
 if [ $lpdtCount -ne 9 ] || [ $tddtCount -ne 9 ];then
-    echo "$fn,get lpdt=$lpdt or tddt=$tddt error" 
+echo "$fn,get lpdt=$lpdt or tddt=$tddt error" 
     logger -t root "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
     $sendmesg "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
     exit 9
@@ -230,12 +231,19 @@ ongoing)
     grep -l "^$tn\$" $rootdir/etc/*${etctype}*_SA |read lib
     lib=${lib##*/}
 
+    # panlm Dec 7, 2012
+    # rebuild SA before delete old SA file, so AOC_ORC_HUB_PRD2_SA now is AOC_ORC_HUB_PRD2_SA1
+    # the following statement do this changes
+   # if [ "$lib" == "AOC_ORC_HUB_PRD2_SA" ]; then
+    #    lib=AOC_ORC_HUB_PRD2_SA1
+ #   fi
+
     if [ "X$currentlastbatch" == "X" ]; then
         db2 rollback >/dev/null
-        db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+        db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
         db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
             head -4 |tail -1 |read currentlastbatch
-        echo $currentlastbatch|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read batchCount
+        echo $currentlastbatch|tr -d '[A-Z]'|tr -d '[a-z]'|tr -d '[-.]' |wc -ck|read batchCount
         if [ $batchCount -ne 21 ];then
            echo "$fn,get currentlastbatch=$currentlastbatch,currentlastbatch error."
            logger -t root "ORC1106X:$fn get currentlastbatch error"
@@ -278,10 +286,10 @@ EOF
     #get SSSHWCUTOF
     if [ "X$currentSSSHWCUTOF" == "X" ];then
       db2 rollback >/dev/null
-      db2 connect to A001 user $hubuser using $hubpass >/dev/null
+      db2 connect to PAP101A user $hubuser using $hubpass >/dev/null
       db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
         head -4 |tail -1 |read currentSSSHWCUTOF
-      echo $currentSSSHWCUTOF|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
+      echo $currentSSSHWCUTOF|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
       if [ $SSSHWCUTOFCount -ne 21 ];then
         echo "$fn,get currentSSSHWCUTOF=$currentSSSHWCUTOF error"
         logger -t roor "ORC1107X:$fn get currentSSSHWCUTOF error"
@@ -315,7 +323,7 @@ EOF
         ts="$lpdt2 00:00:00.000000"
     fi
     rm -f $rootdir/tmp/$$.sql
-
+echo $lib
     #ts="2008-11-03 00:00:00.000000"
     # start dsjob
     umask 000
@@ -325,12 +333,13 @@ EOF
     dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$datadir \
         -param prmLibDB2=$lib -param prmDteTimestamp="$ts" \
         -param prmDteBegin="$lastcontext" -param prmDteEnd="$currentcontext" \
+        -param prmUsrDB2="" -param prmPwdDB2="" \
         $proj $job 2>/dev/null
 ;;
 date2)
     # date format: 20080101
 
-    db2 connect to $database user $db2user using $db2pass >/dev/null
+    db2 connect to PAP101A user $db2user using $db2pass >/dev/null
     db2 "select zatmze from $lib.ssjgavp where zajgid = 'SSSS999'" |\
         head -4 |tail -1 |read currentlastbatch
     tail -1 $rootdir/savedata/lastbatch |read lastlastbatch
@@ -342,8 +351,8 @@ date2)
 
     if [ "$tddt" != `date +%Y%m%d` ]; then
         # today is holiday
-        exit 9
-        :
+       exit 9
+       :
     fi
 
     echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt2
@@ -365,7 +374,7 @@ date)
 
     if [ -z "$currentlastbatch" ]; then
         db2 rollback >/dev/null
-        db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+        db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
         db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
             head -4 |tail -1 |read currentlastbatch
     fi

@@ -125,7 +125,6 @@ dpr_orc_prd2)
     gettypename |read type
     if [ "x$type" == "x" ]; then
         echo "type not found"
-	logger -t root "ORC1001X : DSJOB ERROR,$tn type not found!"
         exit 9
     fi
     echo djpEXT$type$tn |sed 's/[#@]/_/g' |read job
@@ -173,17 +172,15 @@ dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |re
 
 
 # get tddt lpdt
-#if [ $istts -eq 1 ]; then
-#    db2 connect to $ttsdatabase user $ttsuser using $ttspass >/dev/null
-#    db2 "select XSLPDT,XSTDDT from AOCHSSFP.ssdatep " |\
-#        head -4 |tail -1 |read lpdt tddt
-#else
-#    db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
-#    db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
-#        head -4 |tail -1 |read lpdt tddt
-#fi
-lpdt=20100329
-tddt=20100330
+if [ $istts -eq 1 ]; then
+    db2 connect to $ttsdatabase user $ttsuser using $ttspass >/dev/null
+    db2 "select XSLPDT,XSTDDT from AOCHSSFP.ssdatep " |\
+        head -4 |tail -1 |read lpdt tddt
+else
+    db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+    db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
+        head -4 |tail -1 |read lpdt tddt
+fi
 echo $lpdt |sed 's/[ .]//g' |read lpdt
 echo $tddt |sed 's/[ .]//g' |read tddt
 # get lpdt error
@@ -381,7 +378,7 @@ date)
         logger -t root "ORC1004X : the batch is running,$tn can't run now!"
         $sendmesg "ORC1004X : the batch is running,$tn can't run now!"
         echo "batch is running"
-        #exit 9
+        exit 9
     fi
 
     if [ "$tddt" != `date +%Y%m%d` ]; then
@@ -395,8 +392,7 @@ date)
         etctype=TTS
         ttsstr=tts
     else
-        #echo AOCHUBFP |read lib
-        echo HUBDSBK |read lib
+        echo AOCHUBFP |read lib
         etctype=HUB
         ttsstr=""
     fi

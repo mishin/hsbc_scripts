@@ -84,11 +84,11 @@ tn=$2
 
 # source db2 profile
 export DB2CODEPAGE=1208
-. /home/sds01pc/sds01pc1/sqllib/db2profile
+. /home/sds01pc/sds01pc2/sqllib/db2profile
 
 # get user/pass if it is null
 if [ -z "$hubdatabase" ]; then
-    hubdatabase=B001
+    hubdatabase=PAP101D
     hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
     hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
 fi
@@ -173,17 +173,15 @@ dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |re
 
 
 # get tddt lpdt
-#if [ $istts -eq 1 ]; then
-#    db2 connect to $ttsdatabase user $ttsuser using $ttspass >/dev/null
-#    db2 "select XSLPDT,XSTDDT from AOCHSSFP.ssdatep " |\
-#        head -4 |tail -1 |read lpdt tddt
-#else
-#    db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
-#    db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
-#        head -4 |tail -1 |read lpdt tddt
-#fi
-lpdt=20100329
-tddt=20100330
+if [ $istts -eq 1 ]; then
+    db2 connect to $ttsdatabase user $ttsuser using $ttspass >/dev/null
+    db2 "select XSLPDT,XSTDDT from AOCHSSFP.ssdatep " |\
+        head -4 |tail -1 |read lpdt tddt
+else
+    db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+    db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
+        head -4 |tail -1 |read lpdt tddt
+fi
 echo $lpdt |sed 's/[ .]//g' |read lpdt
 echo $tddt |sed 's/[ .]//g' |read tddt
 # get lpdt error
@@ -195,10 +193,10 @@ if [ $? -eq 0 ]; then
     exit 9
 fi
 
-echo $lpdt |tr -d '[A-z]' |tr -d ' '|wc -ck |read lpdtCount
-echo $tddt |tr -d '[A-z]' |tr -d ' '|wc -ck |read tddtCount
+echo $lpdt |tr -d '[A-Z]'|tr -d '[a-z]' |tr -d ' '|wc -ck |read lpdtCount
+echo $tddt |tr -d '[A-Z]'|tr -d '[a-z]' |tr -d ' '|wc -ck |read tddtCount
 if [ $lpdtCount -ne 9 ] || [ $tddtCount -ne 9 ];then
-    echo "$fn,get lpdt=$lpdt or tddt=$tddt error" 
+echo "$fn,get lpdt=$lpdt or tddt=$tddt error" 
     logger -t root "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
     $sendmesg "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
     exit 9
@@ -210,7 +208,7 @@ day1)
 
     echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt2
     ts="$lpdt2 00:00:00.000000"
-
+echo aaa
     # start dsjob
     datafile=$fn.$datets$inst.TXT
     dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$dir \
@@ -233,12 +231,22 @@ ongoing)
     grep -l "^$tn\$" $rootdir/etc/*${etctype}*_SA |read lib
     lib=${lib##*/}
 
+    # rebuild SA before delete old SA file, so AOC_ORC_HUB_PRD2_SA now is AOC_ORC_HUB_PRD2_SA1
+    # the following statement do this changes
+    if [ "$lib" == "AOC_ORC_HUB_PRD2_SA" ]; then
+        lib=AOC_ORC_HUB_PRD2_SA1
+    fi
+
+echo $lib
+exit
+
+
     if [ "X$currentlastbatch" == "X" ]; then
         db2 rollback >/dev/null
         db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
         db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
             head -4 |tail -1 |read currentlastbatch
-        echo $currentlastbatch|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read batchCount
+        echo $currentlastbatch|tr -d '[A-Z]'|tr -d '[a-z]'|tr -d '[-.]' |wc -ck|read batchCount
         if [ $batchCount -ne 21 ];then
            echo "$fn,get currentlastbatch=$currentlastbatch,currentlastbatch error."
            logger -t root "ORC1106X:$fn get currentlastbatch error"
@@ -249,16 +257,16 @@ ongoing)
 
     . /sysp/attun51/cnorc/navroot/bin/nav_login.sh
 
-    lastlastbatch="0001-01-01-00.00.00.000000"
-    echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
-    echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
-    if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
-        # batch is running
-        logger -t root "ORC1003X : the batch is running,$tn can't run now!"
-        $sendmesg "ORC1003X : the batch is running,$tn can't run now!"
-        echo "batch is running"
-        exit 9
-    fi
+ #   lastlastbatch="0001-01-01-00.00.00.000000"
+ #   echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
+ #   echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
+ #   if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
+       # batch is running
+ #       logger -t root "ORC1003X : the batch is running,$tn can't run now!"
+     #   $sendmesg "ORC1003X : the batch is running,$tn can't run now!"
+     #   echo "batch is running"
+    #    exit 9
+   # fi
 
     # get last context
     cat $rootdir/savedata/${etctype}lastcontext |grep "^$tn " |awk '{print $2}' |\
@@ -281,10 +289,10 @@ EOF
     #get SSSHWCUTOF
     if [ "X$currentSSSHWCUTOF" == "X" ];then
       db2 rollback >/dev/null
-      db2 connect to A001 user $hubuser using $hubpass >/dev/null
+      db2 connect to PAP101D user $hubuser using $hubpass >/dev/null
       db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
         head -4 |tail -1 |read currentSSSHWCUTOF
-      echo $currentSSSHWCUTOF|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
+      echo $currentSSSHWCUTOF|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
       if [ $SSSHWCUTOFCount -ne 21 ];then
         echo "$fn,get currentSSSHWCUTOF=$currentSSSHWCUTOF error"
         logger -t roor "ORC1107X:$fn get currentSSSHWCUTOF error"
@@ -328,6 +336,7 @@ EOF
     dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$datadir \
         -param prmLibDB2=$lib -param prmDteTimestamp="$ts" \
         -param prmDteBegin="$lastcontext" -param prmDteEnd="$currentcontext" \
+        -param prmUsrDB2="" -param prmPwdDB2="" \
         $proj $job 2>/dev/null
 ;;
 date2)
@@ -373,16 +382,16 @@ date)
             head -4 |tail -1 |read currentlastbatch
     fi
 
-    lastlastbatch="0001-01-01-00.00.00.000000" 
-    echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
-    echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
-    if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
-        # batch is running
-        logger -t root "ORC1004X : the batch is running,$tn can't run now!"
-        $sendmesg "ORC1004X : the batch is running,$tn can't run now!"
-        echo "batch is running"
-        #exit 9
-    fi
+  #  lastlastbatch="0001-01-01-00.00.00.000000" 
+  #  echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
+  #  echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
+  #  if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
+  #      # batch is running
+  #      logger -t root "ORC1004X : the batch is running,$tn can't run now!"
+  #      $sendmesg "ORC1004X : the batch is running,$tn can't run now!"
+  #      echo "batch is running"
+  #      exit 9
+  #  fi
 
     if [ "$tddt" != `date +%Y%m%d` ]; then
         # today is holiday
@@ -391,12 +400,11 @@ date)
     fi
 
     if [ $istts -eq 1 ]; then
-        cat $rootdir/etc/ttslibname.txt |grep "^$tn " |awk '{print $2}' |read lib
+       cat $rootdir/etc/ttslibname.txt |grep "^$tn " |awk '{print $2}' |read lib
         etctype=TTS
         ttsstr=tts
     else
-        #echo AOCHUBFP |read lib
-        echo HUBDSBK |read lib
+        echo AOCHUBFP |read lib
         etctype=HUB
         ttsstr=""
     fi

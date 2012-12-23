@@ -1,6 +1,6 @@
 #!/usr/bin/ksh
-
-. /sysp/DataStage/Ascential/DataStage/DSEngine/dsenv
+. /sysp/DataStage81_01/InformationServer/Server/DSEngine/dsenv
+#. /sysp/DataStage/Ascential/DataStage/DSEngine/dsenv
 export PATH=$DSHOME/bin:$NAVROOT/bin:/usr/local/bin:$PATH
 export rootdir=/hsbc/orc/data/dsjob_ongoing
 export sendmesg=/hsbc/orc/data/FFMessage/sendmesg.sh
@@ -14,7 +14,7 @@ export dir=/hsbc/orc/data/alldata
 #sybase iq server
 export sybhost=130.39.170.7
 export sybuser=sybiq
-export sybpass=kong2468
+export sybpass=qwer1234
 
 #monitor host
 #export monhost=133.2.95.85

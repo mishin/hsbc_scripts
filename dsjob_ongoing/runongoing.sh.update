@@ -12,12 +12,12 @@ fi
 #
 # Ignore date 
 #
-cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
-if [ $? -eq 0 ];then
-  echo "ignore $dateStr"
-  $sendmesg "$dateStr today will be ignored" 
-  exit 9
-fi
+#cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
+#if [ $? -eq 0 ];then
+#  echo "ignore $dateStr"
+#  $sendmesg "$dateStr today will be ignored" 
+#  exit 9
+#fi
 
 joblist=$1
 
@@ -70,50 +70,49 @@ cp ${rootdir}/savedata/TTSlastdate ${rootdir}/savedata/TTSlastdate.${datestamp} 
   exit 9 )
 
 
-hubdatabase=PAP101D
-hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
-hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
-export hubdatabase hubuser hubpass
+#hubdatabase=B001
+#hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
+#hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
+#export hubdatabase hubuser hubpass
 
-ttsdatabase=U17SYS
-ttsuser=`/hsbc/orc/data/encrypt/getuid.sh tts.key tts.uid`
-ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
-export ttsdatabase ttsuser ttspass
+#ttsdatabase=U17SYS
+#ttsuser=`/hsbc/orc/data/encrypt/getuid.sh tts.key tts.uid`
+#ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
+#export ttsdatabase ttsuser ttspass
 
-DB2CODEPAGE=1208;export DB2CODEPAGE
-. /home/sds01pc/sds01pc2/sqllib/db2profile
-
-hubdatabase2=PAP101A
+#DB2CODEPAGE=1208;export DB2CODEPAGE
+#. /home/sds01pc/sds01pc1/sqllib/db2profile
 
 #get currentlastbatch
-db2 rollback >/dev/null
-db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
-db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
-    head -4 |tail -1 |read currentlastbatch
-export currentlastbatch
+#db2 rollback >/dev/null
+#db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+#db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
+#    head -4 |tail -1 |read currentlastbatch
+#export currentlastbatch
 
-echo "currentlastbatch : $currentlastbatch"
+#echo "currentlastbatch : $currentlastbatch"
 # get currentSSSHWCUTOF : dbname=A001 
-db2 rollback >/dev/null
-db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
-db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
-    head -4 |tail -1 |read currentSSSHWCUTOF
-export hubdatabase2 currentSSSHWCUTOF
+#hubdatabase2=A001
+#db2 rollback >/dev/null
+#db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
+#db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
+#    head -4 |tail -1 |read currentSSSHWCUTOF
+#export hubdatabase2 currentSSSHWCUTOF
 
-echo "currentSSSHWCUTOF: $currentSSSHWCUTOF"
+#echo "currentSSSHWCUTOF: $currentSSSHWCUTOF"
 
 #
 # exit when batch is running
 #
-lastlastbatch="0001-01-01-00.00.00.000000"
-echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
-echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
-if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
-  echo "batch is running"
-  logger -t root "ORC1003X : the batch is running now" 
-  $sendmesg "ORC1003X : the batch is running now" 
-  exit 9
-fi
+#lastlastbatch="0001-01-01-00.00.00.000000"
+#echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
+#echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
+#if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
+#  echo "batch is running"
+#  logger -t root "ORC1003X : the batch is running now" 
+#  $sendmesg "ORC1003X : the batch is running now" 
+#  exit 9
+#fi
 #
 # judge the count of currentlastbatch and currentSSSHWCUTOF 
 # default=21
@@ -123,14 +122,14 @@ fi
 
 
 
-echo $currentlastbatch|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read batchCount
-echo $currentSSSHWCUTOF|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
-if [ $batchCount -ne 21 ] || [ $SSSHWCUTOFCount -ne 21 ];then
-  echo "get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
-  logger -t root "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
-  $sendmesg "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
-  exit 9
-fi 
+#echo $currentlastbatch|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read batchCount
+#echo $currentSSSHWCUTOF|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
+#if [ $batchCount -ne 21 ] || [ $SSSHWCUTOFCount -ne 21 ];then
+#  echo "get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+#  logger -t root "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+#  $sendmesg "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+#  exit 9
+#fi 
  
 
 
@@ -161,7 +160,7 @@ cat $rootdir/$joblist |while read project name ; do
       sleep 2
     done
   fi
-  $rootdir/dsjob_sche.sh $project $name &
+  $rootdir/dsjob_sche.update $project $name &
   sleep 1
   echo $! >>$pid
 done

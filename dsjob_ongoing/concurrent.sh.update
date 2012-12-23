@@ -5,25 +5,25 @@
 datestamp=`date +"%Y%m%d%H%M%S"`
 dateStr=`date +"%Y%m%d"`
 
-if [[ $# -ne 0  && $# -ne 1 ]]; then
+if [[ $# -ne 1 ]]; then
   echo "usage: $0 [joblist_file] "
   exit 9
 fi
 #
 # Ignore date 
 #
-cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
-if [ $? -eq 0 ];then
-  echo "ignore $dateStr"
-  $sendmesg "$dateStr today will be ignored" 
-  exit 9
-fi
+#cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
+#if [ $? -eq 0 ];then
+#  echo "ignore $dateStr"
+#  $sendmesg "$dateStr today will be ignored" 
+#  exit 9
+#fi
 
 joblist=$1
 
-if [ "X$joblist" == "X" ];then
-  joblist=hubttsall.lst 
-fi
+#if [ "X$joblist" == "X" ];then
+#  joblist=hubttsall.lst 
+#fi
 
 if [[ ! -f $rootdir/$joblist ]];then
   echo "joblist:$rootdir/$joblist is not exist"
@@ -70,7 +70,7 @@ cp ${rootdir}/savedata/TTSlastdate ${rootdir}/savedata/TTSlastdate.${datestamp} 
   exit 9 )
 
 
-hubdatabase=PAP101D
+hubdatabase=B001
 hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
 hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
 export hubdatabase hubuser hubpass
@@ -81,19 +81,18 @@ ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
 export ttsdatabase ttsuser ttspass
 
 DB2CODEPAGE=1208;export DB2CODEPAGE
-. /home/sds01pc/sds01pc2/sqllib/db2profile
-
-hubdatabase2=PAP101A
+. /home/sds01pc/sds01pc1/sqllib/db2profile
 
 #get currentlastbatch
 db2 rollback >/dev/null
-db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
+db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
 db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
     head -4 |tail -1 |read currentlastbatch
 export currentlastbatch
 
 echo "currentlastbatch : $currentlastbatch"
 # get currentSSSHWCUTOF : dbname=A001 
+hubdatabase2=A001
 db2 rollback >/dev/null
 db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
 db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
@@ -110,7 +109,7 @@ echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
 echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
 if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
   echo "batch is running"
-  logger -t root "ORC1003X : the batch is running now" 
+  #logger -t root "ORC1003X : the batch is running now" 
   $sendmesg "ORC1003X : the batch is running now" 
   exit 9
 fi
@@ -118,27 +117,15 @@ fi
 # judge the count of currentlastbatch and currentSSSHWCUTOF 
 # default=21
 #
-
-
-
-
-
-echo $currentlastbatch|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read batchCount
-echo $currentSSSHWCUTOF|tr -d '[A-Z]'|tr -d '[a-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
+echo $currentlastbatch|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read batchCount
+echo $currentSSSHWCUTOF|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
 if [ $batchCount -ne 21 ] || [ $SSSHWCUTOFCount -ne 21 ];then
   echo "get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
-  logger -t root "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
+  #logger -t root "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
   $sendmesg "ORC1108X:get currentlastbatch=$currentlastbatch or currentSSSHWCUTOF=$currentSSSHWCUTOF error"
   exit 9
 fi 
  
-
-
-
-
-
-
-
 
 EXIT=0
 cat $rootdir/$joblist |while read project name ; do
@@ -171,8 +158,9 @@ wait
 if [ $EXIT -eq 0 ];then
   df -Pk /hsbc/orc/data |tail -1 |awk '{print$5}'|tr -d '%'|read currSpace
   if [ $currSpace -lt 98 ];then
-    cat $rootdir/$joblist |grep -qw "dpr_orc_prd2" && >$dir/data_ongoing.flag && >$dir/data_ondate.flag
-    cat $rootdir/$joblist |grep -qw "dpr_orc_prd3" && >$dir/data_ttsongoing.flag && >$dir/data_ttsondate.flag
+	:
+    #cat $rootdir/$joblist |grep -qw "dpr_orc_prd2" && >$dir/data_ongoing.flag && >$dir/data_ondate.flag
+    #cat $rootdir/$joblist |grep -qw "dpr_orc_prd3" && >$dir/data_ttsongoing.flag && >$dir/data_ttsondate.flag
   else 
     echo "ORC1111X:Space Waring:There is not enough space in the file system.check /hsbc/orc/data"
     logger -t root "ORC1111X:Space Warning:There is not enough space in the file system.check /hsbc/orc/data"

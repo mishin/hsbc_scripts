@@ -12,12 +12,12 @@ fi
 #
 # Ignore date 
 #
-cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
-if [ $? -eq 0 ];then
-  echo "ignore $dateStr"
-  $sendmesg "$dateStr today will be ignored" 
-  exit 9
-fi
+#cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
+#if [ $? -eq 0 ];then
+#  echo "ignore $dateStr"
+#  $sendmesg "$dateStr today will be ignored" 
+#  exit 9
+#fi
 
 joblist=$1
 
@@ -70,7 +70,7 @@ cp ${rootdir}/savedata/TTSlastdate ${rootdir}/savedata/TTSlastdate.${datestamp} 
   exit 9 )
 
 
-hubdatabase=PAP101D
+hubdatabase=B001
 hubuser=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
 hubpass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
 export hubdatabase hubuser hubpass
@@ -81,19 +81,19 @@ ttspass=`/hsbc/orc/data/encrypt/getpwd.sh tts.key tts.uid`
 export ttsdatabase ttsuser ttspass
 
 DB2CODEPAGE=1208;export DB2CODEPAGE
-. /home/sds01pc/sds01pc2/sqllib/db2profile
-
-hubdatabase2=PAP101A
+. /home/sds01pc/sds01pc1/sqllib/db2profile
 
 #get currentlastbatch
 db2 rollback >/dev/null
-db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
+db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
 db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
     head -4 |tail -1 |read currentlastbatch
 export currentlastbatch
 
 echo "currentlastbatch : $currentlastbatch"
 # get currentSSSHWCUTOF : dbname=A001 
+hubdatabase2=A001
+hubdatabase2=B001
 db2 rollback >/dev/null
 db2 connect to $hubdatabase2 user $hubuser using $hubpass >/dev/null
 db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
@@ -161,7 +161,7 @@ cat $rootdir/$joblist |while read project name ; do
       sleep 2
     done
   fi
-  $rootdir/dsjob_sche.sh $project $name &
+  $rootdir/dsjob_sche.sh.run20120110 $project $name &
   sleep 1
   echo $! >>$pid
 done

@@ -182,8 +182,8 @@ dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |re
 #    db2 "select XSLPDT,XSTDDT from AOCHUBFP.ssdatep " |\
 #        head -4 |tail -1 |read lpdt tddt
 #fi
-lpdt=20100329
-tddt=20100330
+lpdt=20100326
+tddt=20100329
 echo $lpdt |sed 's/[ .]//g' |read lpdt
 echo $tddt |sed 's/[ .]//g' |read tddt
 # get lpdt error
