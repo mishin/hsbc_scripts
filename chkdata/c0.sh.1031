@@ -1,0 +1,18 @@
+#!/usr/bin/ksh
+
+if [ $# -ne 1 ]; then
+  echo "usage: $0 list_file"
+  exit 9
+fi
+
+DB2CODEPAGE=1208;export DB2CODEPAGE
+. /home/sds01pc/sds01pc1/sqllib/db2profile
+user=`/hsbc/orc/data/encrypt/getuid.sh hub.key hub.uid`
+pass=`/hsbc/orc/data/encrypt/getpwd.sh hub.key hub.uid`
+db2 -a connect to B001 user $user using $pass >/dev/null
+
+  db2 -tf $1 |awk 'BEGIN {sum=0}
+{for(i=1;i<=NF;i++)sum+=$i;if(sum!=0){gsub(/  */," ",$0);print};sum=0}' > /hsbc/orc/data/chkdata/hub0.0e.dat/$1.out
+
+db2 disconnect B001
+

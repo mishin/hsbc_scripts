@@ -1,0 +1,54 @@
+#!/usr/bin/ksh
+
+if [ $# -ne 1 ]; then
+  echo "usage: $0 <file_dir>"
+  echo "usage: $0 <hub1.0e> "
+  exit 9
+fi
+file=$1
+file_dat=${file}.dat
+image=${file%%.*}
+if [ ! -d $file ];then
+  echo "$file is not exist"
+  exit
+fi
+mkdir $file_dat 2>/dev/null
+
+if [[  ! -d ${file%%.*}.0e.dat ]];then
+  echo "${file%%.*}.0e.dat is no exsit"
+  exit 
+fi
+
+case $image in 
+hub1|hub2|hub3|hub4) 
+  a=0
+;;
+tts1|tts2|tts3|tts4) 
+  a=1
+;;
+*)  
+  echo "image type is error"
+  exit 0
+esac
+
+if [ -d tmp/$file ];then
+  rm -rf tmp/$file
+  mkdir tmp/$file
+else
+  mkdir tmp/$file || exit
+fi
+
+n=0
+for i in $1/*.sql ; do
+  echo $n % 10 |bc |read num
+  echo $i >> tmp/${file}/list$num.lst
+  n=$((n+1))
+done
+
+for i in 0 1 2 3 4 5 6 7 8 9 ; do
+  ls tmp/${file}/list$i.lst && ./c$a.sh tmp/${file}/list$i.lst &
+done
+
+wait
+
+
