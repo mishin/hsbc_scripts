@@ -1,0 +1,8 @@
+*.dsx
+CVS
+*.tgz
+*.gz
+*.tar
+*.log
+*.lst
+*.list

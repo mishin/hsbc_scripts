@@ -1,0 +1,72 @@
+#!/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -ne 2 ]; then
+  exit
+fi
+
+function runftp {
+  echo "===" >>$rootdir/log/ftp.log
+  ftp -vin >>$rootdir/log/ftp.log <<EOF
+open 130.39.170.7
+user sybiq pxtpq67j
+bin
+lcd $dir
+cd /sybiq/script/data
+put $fn.$date.TXT
+close
+open 133.2.95.85
+user ftpuser ftpuser
+bin
+lcd $rootdir/log
+cd /dsjob
+put $job
+bye
+EOF
+}
+
+proj=$1
+job=$2
+out=$rootdir/log/$job
+dir=/hsbc/orc/data
+fn=`echo ${job#*_} |sed 's/_/@/'`
+date=`date +%Y%m%d%H%M`
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |read first
+dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir $proj $job 2>/dev/null
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'=' '/Newest id/ {print $2}' |read last
+num=$((last-first))
+dsjob -logsum -max $num $proj $job 2>/dev/null |\
+awk '{printf("%s ",$0);getline;print}' >$out
+
+dsjob -jobinfo $proj $job 2>/dev/null |grep "Job Status" |awk -F'[()]' '{print $2}' |read result
+case $result in
+1)
+   # RUN OK (1)
+   echo "$job is successful"
+   if [ "${job%%_*}" = "Ongoing" ]; then
+     $rootdir/update.sh ${job#*_}
+   fi
+   runftp
+;;
+2)
+   # RUN with WARNINGS (2)
+   echo "$job is successful with warnings"
+   if [ "${job%%_*}" = "Ongoing" ]; then
+     $rootdir/update.sh ${job#*_}
+   fi
+   runftp
+;;
+3)
+   # RUN FAILED (3)
+   echo "$job is failed"
+
+;;
+99)
+   # NOT RUNNING (99) <compiled>
+   :
+;;
+esac
+
+

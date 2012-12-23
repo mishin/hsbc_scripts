@@ -1,0 +1,15 @@
+#!/bin/ksh
+
+proj=panlm
+
+dsjob -ljobs "$proj" 2>/dev/null |while read job ; do
+  echo -e "$job\c"
+  dsjob -jobinfo "$proj" "$job" 2>/dev/null |grep -e "Job Status" -e "Last Run Time" |\
+awk -F": " '{printf",%s",$2} END {printf"\n"}'
+
+
+done
+
+exit
+
+#dsjob -report panlm job_schedual

@@ -5,25 +5,25 @@
 datestamp=`date +"%Y%m%d%H%M%S"`
 dateStr=`date +"%Y%m%d"`
 
-if [[ $# -ne 1 ]]; then
+if [[ $# -ne 0  && $# -ne 1 ]]; then
   echo "usage: $0 [joblist_file] "
   exit 9
 fi
 #
 # Ignore date 
 #
-#cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
-#if [ $? -eq 0 ];then
-#  echo "ignore $dateStr"
-#  $sendmesg "$dateStr today will be ignored" 
-#  exit 9
-#fi
+cat $rootdir/ignoreDate.conf |grep -qw "$dateStr"
+if [ $? -eq 0 ];then
+  echo "ignore $dateStr"
+  $sendmesg "$dateStr today will be ignored" 
+  exit 9
+fi
 
 joblist=$1
 
-#if [ "X$joblist" == "X" ];then
-#  joblist=hubttsall.lst 
-#fi
+if [ "X$joblist" == "X" ];then
+  joblist=hubttsall.lst 
+fi
 
 if [[ ! -f $rootdir/$joblist ]];then
   echo "joblist:$rootdir/$joblist is not exist"

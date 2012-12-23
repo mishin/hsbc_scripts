@@ -35,7 +35,7 @@ function runftp {
 open $sybhost
 user $sybuser $sybpass
 bin
-lcd $datadir
+lcd $dir
 cd /sybiq/script/$dest
 put $datafile
 bye
@@ -158,9 +158,7 @@ date +%Y%m%d%H%M\ %Y-%m-%d\ %H:%M:%S.000000 |read date ts
 
 dsjob -jobinfo $proj $job >/dev/null 2>&1
 if [ $? -eq 255 ]; then
-    echo "Illegal job: $job not found"
-    logger -t root "ORC1001X : DSJOB ERROR,$job not found" 
-    $sendmesg "ORC1001X : DSJOB ERROR,$job not found" 
+    echo "job: $job not found"
     exit
 fi
 dsjob -jobinfo $proj $job 2>/dev/null |awk -F'[()]' '/Job Status/{print $2}' |read status
@@ -186,18 +184,8 @@ echo $tddt |sed 's/[ .]//g' |read tddt
 # get lpdt error
 echo $lpdt |grep -q "SQL"
 if [ $? -eq 0 ]; then
-    echo "DSJOB ERROR,$fn,get lpdt:$lpdt error"
-    logger -t root "ORC1002X : DSJOB ERROR,$fn,get lpdt error"
-    $sendmesg "ORC1002X : DSJOB ERROR,$fn,get lpdt error"
-    exit 9
-fi
-
-echo $lpdt |tr -d '[A-z]' |tr -d ' '|wc -ck |read lpdtCount
-echo $tddt |tr -d '[A-z]' |tr -d ' '|wc -ck |read tddtCount
-if [ $lpdtCount -ne 9 ] || [ $tddtCount -ne 9 ];then
-    echo "$fn,get lpdt=$lpdt or tddt=$tddt error" 
-    logger -t root "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
-    $sendmesg "ORC1002X : DSJOB ERROR,$fn,get lpdt or tddt error"
+    echo "get lpdt error"
+    echo "lpdt: $lpdt"
     exit 9
 fi
 
@@ -222,40 +210,29 @@ ongoing)
 
     if [ $istts -eq 1 ]; then
         etctype=TTS
-        ttsstr=tts
     else
         etctype=HUB
-        ttsstr=""
     fi
     grep -l "^$tn\$" $rootdir/etc/*${etctype}*_SA |read lib
     lib=${lib##*/}
 
-    if [ "X$currentlastbatch" == "X" ]; then
+    #currentlastbatch="2008-11-01-12.37.48.376000"
+    if [ -z "$currentlastbatch" ]; then
         db2 rollback >/dev/null
         db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
         db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
             head -4 |tail -1 |read currentlastbatch
-        echo $currentlastbatch|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read batchCount
-        if [ $batchCount -ne 21 ];then
-           echo "$fn,get currentlastbatch=$currentlastbatch,currentlastbatch error."
-           logger -t root "ORC1106X:$fn get currentlastbatch error"
-           $sendmesg "ORC1106X:$fn get currentlastbatch error"
-           exit 9
-        fi
     fi
+    tail -1 $rootdir/savedata/lastbatch |read lastlastbatch
 
     . /sysp/attun51/cnorc/navroot/bin/nav_login.sh
-
-    lastlastbatch="0001-01-01-00.00.00.000000"
-    echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
-    echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
-    if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
-        # batch is running
-        logger -t root "ORC1003X : the batch is running,$tn can't run now!"
-        $sendmesg "ORC1003X : the batch is running,$tn can't run now!"
-        echo "batch is running"
-        exit 9
-    fi
+    #echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
+    #echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
+    #if [ $currentlastbatch1 -lt $lastlastbatch1 ]; then
+    #  # batch is running
+    #  echo "batch is running"
+    #  exit 9
+    #fi
 
     # get last context
     cat $rootdir/savedata/${etctype}lastcontext |grep "^$tn " |awk '{print $2}' |\
@@ -274,24 +251,16 @@ EOF
             lastcontext="20080101T000000.000000000000"
         fi
     fi
-   
-    #get SSSHWCUTOF
-    if [ "X$currentSSSHWCUTOF" == "X" ];then
-      db2 rollback >/dev/null
-      db2 connect to A001 user $hubuser using $hubpass >/dev/null
-      db2 "select zatmze from AOCHUBFP.ssjbavp where zajbnm = 'SSSHWCUTOF'" |\
-        head -4 |tail -1 |read currentSSSHWCUTOF
-      echo $currentSSSHWCUTOF|tr -d '[A-z]' |tr -d '[-.]' |wc -ck|read SSSHWCUTOFCount
-      if [ $SSSHWCUTOFCount -ne 21 ];then
-        echo "$fn,get currentSSSHWCUTOF=$currentSSSHWCUTOF error"
-        logger -t roor "ORC1107X:$fn get currentSSSHWCUTOF error"
-        $sendmesg "ORC1107X:$fn get currentSSSHWCUTOF error"
-        exit 9
-      fi
-    fi
 
     # get current context
-    echo $currentSSSHWCUTOF |sed 's/^\(..........\)-\(..\)\.\(..\)\.\(..\)/\1T\2:\3:\4/' |read cdcts
+    #db2 connect to $hubdatabase user $hubuser using $hubpass >/dev/null
+    #db2 "select zatmze from AOCHUBFP.ssjbavp where zajgnm = 'SSSHWCUTOF'" |\
+    #  head -4 |tail -1 |read currentlastbatch
+    currentlastbatch="2008-11-04-05.54.20.402000"
+    currentlastbatch="2008-11-05-01.16.26.728000"
+    currentlastbatch="2008-11-06-00.25.48.158000"
+
+    echo $currentlastbatch |sed 's/^\(..........\)-\(..\)\.\(..\)\.\(..\)/\1T\2:\3:\4/' |read cdcts
     cat >$rootdir/tmp/$$.sql <<EOF
 select max(context) from $lib:"$tn" where timestamp <= '$cdcts' ;
 EOF
@@ -318,11 +287,8 @@ EOF
 
     #ts="2008-11-03 00:00:00.000000"
     # start dsjob
-    umask 000
-    datadir=$dir/data_${ttsstr}ongoing
-    nulldatadir=$dir/null${ttsstr}ongoing
     datafile=$fn.$datets.TXT
-    dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$datadir \
+    dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$dir \
         -param prmLibDB2=$lib -param prmDteTimestamp="$ts" \
         -param prmDteBegin="$lastcontext" -param prmDteEnd="$currentcontext" \
         $proj $job 2>/dev/null
@@ -343,7 +309,6 @@ date2)
     if [ "$tddt" != `date +%Y%m%d` ]; then
         # today is holiday
         exit 9
-        :
     fi
 
     echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt2
@@ -369,43 +334,30 @@ date)
         db2 "select zatmze from AOCHUBFP.ssjgavp where zajgid = 'SSSS999'" |\
             head -4 |tail -1 |read currentlastbatch
     fi
+    tail -1 $rootdir/savedata/lastbatch |read lastlastbatch
 
-    lastlastbatch="0001-01-01-00.00.00.000000" 
     echo $currentlastbatch |tr -d '[-.]' |read currentlastbatch1
     echo $lastlastbatch |tr -d '[-.]' |read lastlastbatch1
-    if [ $currentlastbatch1 -eq $lastlastbatch1 ]; then
-        # batch is running
-        logger -t root "ORC1004X : the batch is running,$tn can't run now!"
-        $sendmesg "ORC1004X : the batch is running,$tn can't run now!"
-        echo "batch is running"
-        exit 9
+
+echo $currentlastbatch
+echo $currentlastbatch1
+echo $lastlastbatch
+echo $lastlastbatch1
+
+    if [ $currentlastbatch1 -lt $lastlastbatch1 ]; then
+      # batch is running
+      echo "batch is running"
+      exit 9
     fi
 
-    if [ "$tddt" != `date +%Y%m%d` ]; then
-        # today is holiday
-        echo "today is holiday"
-        exit 9
-    fi
+exit
 
     if [ $istts -eq 1 ]; then
         cat $rootdir/etc/ttslibname.txt |grep "^$tn " |awk '{print $2}' |read lib
-        etctype=TTS
-        ttsstr=tts
     else
         echo AOCHUBFP |read lib
-        etctype=HUB
-        ttsstr=""
     fi
-    
-    #get last date
-    cat $rootdir/savedata/${etctype}lastdate|grep "^$tn "|tail -1|awk '{print $2}'|read lastdate 
 
-    currdate=`date +%Y%m%d` 
-    if [[ $currdate -le $lastdate ]];then
-       # the job runned today
-       echo "$tn can't run job twice today"
-       exit 9
-    fi
     echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt2
     ts="$lpdt2 00:00:00.000000"
 
@@ -416,16 +368,12 @@ date)
         echo $db2user
         echo $db2pass
         echo $ts
-        echo $istts
         exit
     fi
 
     # start dsjob
-    umask 000
-    datadir=$dir/data_${ttsstr}ondate
-    nulldatadir=$dir/null${ttsstr}ondate 
     datafile=$fn.$datets.TXT
-    dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$datadir \
+    dsjob -run -warn 0 -wait -param prmFilTarget=$datafile -param prmDirTarget=$dir \
         -param prmSvrDB2=$database -param prmLibDB2=$lib \
         -param prmUsrDB2=$db2user -param prmPwdDB2=$db2pass \
         -param prmDteTimestamp="$ts" \
@@ -453,35 +401,21 @@ case $result in
     2)
         echo "$image,$tn,WARN($fatalwarntype),$log,$rowsucc,$rowfail"
         echo "$image,$tn,WARN($fatalwarntype),$log" >>$logsumm
-        if [[ "X$fatalwarntype" != "X" ]];then
-          if [ $rowfail -ne 0 ];then
-            logger -t root "ORC1005X : DSJOB WARN,$image $tn RUN WARN($fatalwarntype),refer to $log"
-            $sendmesg "ORC1005X : DSJOB WARN,$image $tn RUN WARN($fatalwarntype),refer to $log"
-          fi
-        fi
     ;;
     esac
     ftplogs
-    ls -l $datadir/$datafile |awk '{print $5}' |read sz
+    ls -l $dir/$datafile |awk '{print $5}' |read sz
     if [ $sz -gt 0 ]; then
-        #runftp
+        runftp
         if [ $type == "ongoing" ]; then
             #rm -f $dir/$datafile
             echo "$tn $currentcontext" >> $rootdir/savedata/${etctype}lastcontext
         fi
-        if [ $type == "date" ];then
-            echo "$tn $currdate">>$rootdir/savedata/${etctype}lastdate 
-        fi
-    else 
-        mv $datadir/$datafile $nulldatadir 
     fi
 ;;
 3)  # RUN FAILED (3)
     echo "$image,$tn,FAIL($fatalwarntype),$log"
     echo "$image,$tn,FAIL($fatalwarntype),$log" >>$logsumm
-    #echo "$fatalwarntype"|grep -qw "no_member" || \
-    logger -t root "ORC1006X : DSJOB ERROR,$image $tn RUN FAIL($fatalwarntype) ,refer to $log"
-    $sendmesg "ORC1006X : DSJOB ERROR,$image $tn RUN FAIL($fatalwarntype) ,refer to $log"
     ftplogs
     dsjob -run -mode RESET $proj $job >/dev/null 2>&1
 ;;

@@ -1,0 +1,254 @@
+#!/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -ne 2 ]; then
+  echo
+  echo "Usage: $0 project_name job_name"
+  echo
+  exit
+fi
+
+###
+### function runftp
+###
+
+function runftp {
+  # add treats table prefix string
+  if [ $istts -eq 1 ]; then
+    ttsstr=tts
+  else
+    ttsstr=""
+  fi
+  # ongoing type data files are distinct from others data files.
+  # (day1/ondate1/ondate2)
+  case $type in
+  Ongoing) dest=data_${ttsstr}ongoing ;;
+  Day1)    dest=data_${ttsstr}day1 ;;
+  Date1)   dest=data_${ttsstr}ondate ;;
+  Date2)   dest=data_${ttsstr}ondate ;;
+  Date)    dest=data_${ttsstr}ondate ;;
+  esac
+  echo "===" >>$rootdir/log/ftp.log
+  ftp -vin >>$rootdir/log/ftp.log 2>&1 <<EOF
+open $sybhost
+user $sybuser $sybpass
+bin
+lcd $dir
+cd /sybiq/script/$dest
+put $fn.$date.TXT
+close
+open $monhost
+user $monuser $monpass
+bin
+lcd $rootdir/log
+cd /dsjob
+put $job
+bye
+EOF
+}
+
+###
+### main
+###
+
+proj=$1
+job=$2
+# treats tables or not
+case $proj in
+dpr_orc_dev)  istts=0 ;;
+dpr_orc_dev1) istts=0 ;;
+dpr_orc_dev2) istts=1
+              export db2user=$ttsdb2user
+              export db2pass=$ttsdb2pass
+;;
+*)            echo "datastage project name not exist"
+              exit
+;;
+esac
+type=${job%%_*}
+log=$rootdir/log/$job
+#dir move to env.sh
+#dir=/hsbc/orc/data/20080702
+
+echo ${job#*_} |read fn
+cat $rootdir/sharpinfn |grep "^$fn "  |read sharp1 sharp2
+if [ "x" == "x$sharp2" ]; then
+  echo $fn |sed 's/_/@/' |read fn
+else
+  fn=$sharp2
+fi
+
+# timestamp
+tn=$fn
+ls $rootdir/jobts.conf >/dev/null 2>&1
+if [ $? -eq 0 ]; then
+  cat $rootdir/jobts.conf |read date ts
+else
+  date +%Y%m%d%H%M\ %Y-%m-%d\ %H:%M:%S.000000 |read date ts
+fi
+
+dsjob -jobinfo $proj $job >/dev/null 2>&1
+if [ $? -eq 255 ]; then
+  echo "job: $job not be found"
+  exit
+fi
+dsjob -jobinfo $proj $job 2>/dev/null |awk -F'[()]' '/Job Status/{print $2}' |read status
+if [ $status -eq 21 -o $status -eq 3 ]; then
+ dsjob -run -mode RESET $proj $job >/dev/null 2>&1
+fi
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |read first
+
+case $type in
+Ongoing) 
+    # date format: 2008-01-01T00:00:00.000000
+    export DB2CODEPAGE=1208
+    . /home/sds01uc/sds01uc1/sqllib/db2profile
+    db2 connect to C6SYSTEM user $db2user using $db2pass >/dev/null
+    db2 "select XSLPDT from aochubfp.ssdatep" |head -4 |tail -1 |\
+      sed 's/[ .]//g' |read lpdt
+    echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt
+    ts="$lpdt 00:00:00.000000"
+    db2 "select max(ORCONT) from aochubfp.orcdate3 where ORFLNM = '$tn' " |\
+      head -4 |tail -1 |read lastcutoff
+    echo lastcutoff |sed 's/^\(..........\)-\(..\)\.\(..\)\.\(..\)/\1T\2:\3:\4/' |read lastcutoff1
+    db2 "select zatmze from aochubfp.ssjbavp where zajbnm = 'SSSHWCUTOF' " |\
+      head -4 |tail -1 |read cutoff
+    echo cutoff |sed 's/^\(..........\)-\(..\)\.\(..\)\.\(..\)/\1T\2:\3:\4/' |read cutoff1
+    grep -lw "$tn" $rootdir/AOC_ORACLE_TEST*_SA |read lib
+    lib=${lib##*/}
+    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+      -param library=$lib -param tstimestamp="$ts" \
+      -param cutoff="$cutoff1" -param lastcutoff="$lastcutoff1" \
+      $proj $job 2>/dev/null
+;;
+Day1)
+    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+      -param username=$db2user -param password=$db2pass \
+      -param tstimestamp="$ts" $proj $job 2>/dev/null
+;;
+Date1)
+    # date format: 2008-01-01-00.00.00.000000
+    cat $rootdir/field.lst |grep "^$tn " |awk '{print $2}' |read col
+    if [ "x" == "x$col" ]; then
+      echo "can't get column name from field.lst"
+      exit
+    fi
+    export DB2CODEPAGE=1208
+    . /home/sds01uc/sds01uc1/sqllib/db2profile
+    db2 connect to C6SYSTEM user $db2user using $db2pass >/dev/null
+    db2 "select max($col) from aochubfp.$tn" |head -4 |tail -1 |read maxtmz
+    if [ "x" == "x$maxtmz" ]; then
+      echo "$tn is empty in db2"
+      exit
+    fi
+    db2 "select ortmz1 from aochubfp.orcdate1 where orflnm = '$tn'" |\
+      head -4 |tail -1 |read mintmz
+    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+      -param username=$db2user -param password=$db2pass \
+      -param mintmz="$mintmz" -param maxtmz="$maxtmz" \
+      -param tstimestamp="$ts" $proj $job 2>/dev/null
+;;
+Date2)
+    # date format: 20080101
+    export DB2CODEPAGE=1208
+    . /home/sds01uc/sds01uc1/sqllib/db2profile
+    db2 connect to C6SYSTEM user $db2user using $db2pass >/dev/null
+    db2 "select ordat1 from aochubfp.orcdate2 where orflnm = '$tn'" |\
+      head -4 |tail -1 |sed 's/[ .]//g' |read mintmz
+    $rootdir/yesterday.sh |read maxtmz
+    if [ "$mintmz" -eq "$maxtmz" ]; then
+      echo "this job has been done successful today"
+      exit
+    fi
+    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+      -param username=$db2user -param password=$db2pass \
+      -param mintmz="$mintmz" -param maxtmz="$maxtmz" \
+      -param tstimestamp="$ts" $proj $job 2>/dev/null
+;;
+Date)    
+    export DB2CODEPAGE=1208
+    . /home/sds01uc/sds01uc1/sqllib/db2profile
+    db2 connect to C6SYSTEM user $db2user using $db2pass >/dev/null
+    db2 "select XSLPDT from aochubfp.ssdatep" |head -4 |tail -1 |\
+      sed 's/[ .]//g' |read lpdt
+    echo $lpdt |sed 's/\(....\)\(..\)\(..\)/\1-\2-\3/' |read lpdt
+    ts="$lpdt 00:00:00.000000"
+    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+      -param username=$db2user -param password=$db2pass \
+      -param tstimestamp="$ts" $proj $job 2>/dev/null
+;;
+esac
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'=' '/Newest id/ {print $2}' |read last
+echo $first >&2
+echo $last >&2
+echo >&2
+dsjob -logsum -max $((last-first)) $proj $job 2>/dev/null >$log
+
+dsjob -jobinfo $proj $job 2>/dev/null |awk -F'[()]' '/Job Status/{print $2}' |read result
+case $result in
+1)
+   # RUN OK (1)
+   echo "$job is successful"
+   ls -l $dir/$fn.$date.TXT |awk '{print $5}' |read sz
+   if [ $sz -eq 0 ]; then
+     exit
+   fi
+   runftp
+   case $type in
+   Ongoing) $rootdir/db2put.sh $type $tn $cutoff
+   ;;
+   Day1)    :
+   ;;
+   Date1)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date2)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date)    :
+   ;;
+   esac
+;;
+2)
+   # RUN with WARNINGS (2)
+   echo "$job is successful with warnings"
+   ls -l $dir/$fn.$date.TXT |awk '{print $5}' |read sz
+   if [ $sz -eq 0 ]; then
+     exit
+   fi
+   runftp
+   case $type in
+   Ongoing) $rootdir/db2put.sh $type $tn $cutoff
+   ;;
+   Day1)    :
+   ;;
+   Date1)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date2)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date)    :
+   ;;
+   esac
+;;
+3)
+   # RUN FAILED (3)
+   echo "$job is failed"
+   dsjob -run -mode RESET $proj $job >/dev/null 2>&1
+;;
+21)
+   # RESET (21)
+   echo "$job need RESET"
+   dsjob -run -mode RESET $proj $job >/dev/null 2>&1
+;;
+99)
+   # NOT RUNNING (99) <compiled>
+   :
+;;
+esac
+
+db2 disconnect C6SYSTEM >/dev/null
+
+exit
+
+

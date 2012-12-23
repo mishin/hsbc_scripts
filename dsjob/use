@@ -1,0 +1,8 @@
+
+
+. /sysp/attun50/navroot/bin/nav_login.sh
+
+. /sysp/DataStage/Ascential/DataStage/DSEngine/dsenv
+export PATH=$PATH:$DSHOME/bin
+export rootdir=/hsbc/orc/data/SAT/script/dsjob
+

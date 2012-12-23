@@ -1,0 +1,157 @@
+#!/bin/ksh
+
+. `dirname $0`/env.sh
+
+if [ $# -ne 2 ]; then
+  echo
+  echo "Usage: $0 project_name job_name"
+  echo
+  exit
+fi
+
+###
+### function runftp
+###
+
+function runftp {
+  # ongoing type data files are distinct from others data files.
+  # (day1/ondate1/ondate2)
+  case $type in
+  Ongoing) dest=data_ongoing ;;
+  Day1)    dest=data_day1 ;;
+  Date1)   dest=data_ondate ;;
+  Date2)   dest=data_ondate ;;
+  esac
+  echo "===" >>$rootdir/log/ftp.log
+  ftp -vin >>$rootdir/log/ftp.log <<EOF
+open 130.39.170.7
+user sybiq pxtpq67j
+bin
+lcd $dir
+cd /sybiq/script/$dest
+put $fn.$date.TXT
+close
+open 133.2.95.85
+user ftpuser ftpuser
+bin
+lcd $rootdir/log
+cd /dsjob
+put $job
+bye
+EOF
+}
+
+###
+### main
+###
+
+proj=$1
+job=$2
+type=${job%%_*}
+log=$rootdir/log/$job
+dir=/hsbc/orc/data/20080617
+# if tablename with '#' u should modify this script
+fn=`echo ${job#*_} |sed 's/_/@/'`
+tn=$fn
+date=`date +%Y%m%d%H%M`
+
+dsjob -jobinfo $proj $job 2>/dev/null |awk -F'[()]' '/Job Status/{print $2}' |read status
+if [ $status -eq 21 ]; then
+  dsjob -run -mode RESET $proj $job >/dev/null 2>&1
+fi
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |read first
+
+case $type in
+Ongoing) dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT \
+           -param dir=$dir $proj $job 2>/dev/null
+;;
+Day1)    dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT \
+           -param dir=$dir $proj $job 2>/dev/null
+;;
+Date1)   cat $rootdir/field.lst |grep "^$tn " |awk '{print $2}' |read col
+         export DB2CODEPAGE=1208
+         . /home/sds01uc/sds01uc1/sqllib/db2profile
+         db2 connect to C6SYSTEM user AOCRMTSHH using AOCAPR08 >/dev/null
+         db2 "select max($col) from aochubfp.$tn" |head -4 |tail -1 \
+           |sed 's/[-.]//g' |cut -c1-14 |read maxtmz
+         $rootdir/db2get.sh $type $tn |read mintmz
+         dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+           -param mintmz=$mintmz -param maxtmz=$maxtmz $proj $job 2>/dev/null
+;;
+Date2)   $rootdir/db2get.sh $type $tn |read mintmz
+         $rootdir/yesterday.sh |read maxtmz
+         if [ $mintmz -eq $maxtmz ]; then
+           echo "this job has been done successful today"
+           exit
+         fi
+         dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir \
+           -param mintmz=$mintmz -param maxtmz=$maxtmz $proj $job 2>/dev/null
+;;
+esac
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'=' '/Newest id/ {print $2}' |read last
+num=$((last-first))
+dsjob -logsum -max $num $proj $job 2>/dev/null |\
+awk '{printf("%s ",$0);getline;print}' >$log
+
+dsjob -jobinfo $proj $job 2>/dev/null |awk -F'[()]' '/Job Status/{print $2}' |read result
+case $result in
+1)
+   # RUN OK (1)
+   echo "$job is successful"
+   ls -l $dir/$fn.$date.TXT |awk '{print $5}' |read sz
+   if [ $sz -eq 0 ]; then
+     exit
+   fi
+   runftp
+   case $type in
+   Ongoing) $rootdir/update.sh $tn
+   ;;
+   Day1)    :
+   ;;
+   Date1)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date2)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   esac
+;;
+2)
+   # RUN with WARNINGS (2)
+   echo "$job is successful with warnings"
+   ls -l $dir/$fn.$date.TXT |awk '{print $5}' |read sz
+   if [ $sz -eq 0 ]; then
+     exit
+   fi
+   runftp
+   case $type in
+   Ongoing) $rootdir/update.sh $tn
+   ;;
+   Day1)    :
+   ;;
+   Date1)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   Date2)   $rootdir/db2put.sh $type $tn $maxtmz
+   ;;
+   esac
+;;
+3)
+   # RUN FAILED (3)
+   echo "$job is failed"
+
+;;
+21)
+   # RESET (21)
+   echo "$job need RESET"
+;;
+99)
+   # NOT RUNNING (99) <compiled>
+   :
+;;
+esac
+
+db2 disconnect C6SYSTEM >/dev/null
+
+exit
+
+

@@ -1,0 +1,93 @@
+#!/bin/ksh
+
+if [ $# -ne 2 ]; then
+  exit
+fi
+
+func runftp () {
+  ftp -vin <<EOF
+open $s_ftp
+user $s_user $s_pass
+bin
+lcd $dir
+cd $s_dir
+put $fn.$date.TXT
+close
+open $m_ftp
+user $m_user $m_pass
+bin
+lcd $rootdir/log
+cd $m_dir
+put $job
+bye
+EOF
+}
+
+rootdir=/root/hsbc/script/dsjob
+
+m_ftp=172.30.1.30
+m_user=ftpuser
+m_pass=ftpuser
+m_dir=/dsjob
+s_ftp=130.39.170.7
+s_user=sybiq
+s_pass=pxtpq67j
+s_dir=/sybiq/script/data
+
+date=`date +%Y%m%d%H%M`
+
+proj=$1
+job=$2
+out=$rootdir/log/$job
+dir=/hsbc/orc/data
+fn=`echo ${job#*_} |sed 's/_/@/'`
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'= ' '/Newest id/ {print $2}' |read first
+dsjob -run -warn 0 -wait -param fn=$fn.$date.TXT -param dir=$dir $proj $job 2>/dev/null
+#while [ "$stat" = "running" ] ; do
+#  dsjob -jobinfo $proj $job 2>/dev/null |\
+#  awk -F':' '/Job Status/ {if($0 ~ /RUNNING/)print"running";else print"done"}' |read stat
+#done 
+#===
+#pid=1
+#while [ pid -ne 0 ] ; do
+#  dsjob -jobinfo $proj $job 2>/dev/null |\
+#  awk -F':' '/Job Process ID/ {print $2}' |read pid
+#  sleep 1
+#done
+
+dsjob -lognewest $proj $job 2>/dev/null |awk -F'=' '/Newest id/ {print $2}' |read last
+num=$((last-first))
+dsjob -logsum -max $num $proj $job 2>/dev/null |\
+awk '{printf("%s ",$0);getline;print}' >$out
+
+dsjob -jobinfo $proj $job 2>/dev/null |grep "Job Status" |awk -F'[()]' '{print $2}' |read result
+case $result in
+1)
+   # RUN OK (1)
+   echo "$job is successful"
+   if [ "${job%%_*}" = "Ongoing" ]; then
+     ./update.sh ${job#*_}
+   fi
+   runftp
+;;
+2)
+   # RUN with WARNINGS (2)
+   echo "$job is successful with warnings"
+   if [ "${job%%_*}" = "Ongoing" ]; then
+     ./update.sh ${job#*_}
+   fi
+   runftp
+;;
+3)
+   # RUN FAILED (3)
+   echo "$job is failed"
+
+;;
+99)
+   # NOT RUNNING (99) <compiled>
+   :
+;;
+esac
+
+
