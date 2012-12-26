@@ -1,0 +1,205 @@
+#!/usr/bin/ksh
+
+export img=hub1
+cur=../hub_cur
+#export img=tts1
+#cur=../tts_cur
+
+tmp=./tmp
+
+#rm -fr $img.diff 2>/dev/null
+#rm -fr $img.job 2>/dev/null
+rm -fr $img.load 2>/dev/null
+rm -fr $img.mod 2>/dev/null
+
+mkdir $img.load 2>/dev/null
+mkdir $img.mod 2>/dev/null
+
+if [ ! -d "$img.diff" ]; then
+  mkdir $img.diff 2>/dev/null
+  for i in $img/* ; do
+    diff -u $cur/${i##*/} $i >$$
+    if [ -s $$ ]; then
+      mv $$ $img.diff/${i##*/}
+    fi
+  done
+  rm -f $$
+fi
+
+if [ ! -d "$img.job" ]; then
+  mkdir $img.job 2>/dev/null
+  for i in $img.diff/* ; do
+    cp $img/${i##*/} $img.job/
+    dos2unix $img.job/${i##*/} 2>/dev/null
+    ./conv.sh ${i##*/}
+    mv -f $img.job/${i##*/}.out $img.job/${i##*/}
+  done
+fi
+
+>$tmp/nodup
+>$tmp/dup
+
+function getnull {
+:
+}
+
+function alter {
+case $type in
+A) 
+   if [ $len -gt 100 ]; then
+     sqltype="varchar($len)"
+   else
+     sqltype="char($len)"
+   fi
+   scale=0
+   null=""
+;;
+B) sqltype="varbinary(255)"
+   extended=0
+   precision=$len
+   scale=0
+   null=""
+;;
+L) sqltype=date
+   extended=0
+   precision=$len
+   scale=0
+   null=""
+;;
+O) sqltype="varchar(255)"
+   extended=1
+   #precision=$len
+   precision=255
+   scale=0
+   null=""
+;;
+P|S) if [ $decimal -eq 0 ]; then
+       if [ $int -gt 9 ]; then
+         sqltype=bigint
+         getnull $((int+2)) |read null
+       else
+         sqltype=int
+         getnull $int |read null
+       fi
+       extended=0
+       precision=$int
+       scale=$decimal
+     else
+       sqltype="decimal($int,$decimal)"
+       extended=0
+       precision=$int
+       scale=$decimal
+       getnull $((int+1)) |read null
+     fi
+;;
+Z) sqltype=timestamp
+   extended=1
+   precision=$len
+   scale=0
+   null=""
+;;
+T) #sqltype=time
+   sqltype=timestamp
+   extended=0
+   precision=$len
+   scale=0
+   null=""
+;;
+esac
+
+altersql=$img.mod/${i##*/}.sql
+cat >>$altersql <<EOF
+ALTER TABLE $tn ADD $coln $sqltype NULL
+go
+EOF
+}
+
+
+for i in $img.diff/* ; do
+
+  # create load sql
+  loadsql=$img.load/${i##*/}.sql
+  ./crtingload.sh $img/${i##*/} >$loadsql
+  #echo "LOAD TABLE ${i##*/} (" >$loadsql
+  #cat $img/${i##*/} |awk -F',' '{if(x!="")print x;x=$2"   '"'|'"',"} 
+  #  END {gsub(/\|/,"\\x0a",x);gsub(/,/,"",x);printf "%s",x;print ")"}' >>$loadsql
+  #echo "FROM '{tablename}'" >>$loadsql
+
+  cat $i |sed -n '1,2!p' |sed -n '/^-/p' |awk -F',' '{print ","$2","}' >$tmp/DEL
+  cat $i |sed -n '1,2!p' |sed -n '/^+/p' |awk -F',' '{print ","$2","}' >$tmp/ADD
+  wc -l $tmp/ADD $tmp/DEL |tail -n 1 |awk '{print $1}' |read tline
+  cat $tmp/ADD $tmp/DEL |sort -u |wc -l |read uline
+  if [ $tline -eq $uline ]; then
+    # no duplicate column
+    echo ${i##*/} >>$tmp/nodup
+
+    # create alter sql
+    if [ -s $tmp/ADD ]; then
+      cat $i |sed -n '1,2!p' |sed -n '/^+/p' |sed -e 's/,/ /g' -e 's/^+//' -e 's/$//' |\
+        while read tn coln type len int decimal ; do
+        alter
+      done
+    fi
+  else
+    # duplicate column
+    echo ${i##*/} >>$tmp/dup
+
+    # create alter sql
+    if [ -s $tmp/ADD ]; then
+      cat $i |sed -n '1,2!p' |sed -n '/^+/p' |grep -vf $tmp/DEL |wc -l |read string
+      if [ $string -eq 0 ]; then
+        # no add column, only modify and delete
+        grep -vf $tmp/ADD $tmp/DEL |read tmpstring
+        if [ "x$tmpstring" == "x" ]; then
+          # with only changed column (load.sql is no needed)
+          rm -f $img.load/${i##*/}.sql
+        fi
+      else
+        cat $i |sed -n '1,2!p' |sed -n '/^+/p' |grep -vf $tmp/DEL |\
+          sed -e 's/,/ /g' -e 's/^+//' -e 's/$//' |\
+          while read tn coln type len int decimal ; do
+            alter
+        done
+      fi
+    fi
+
+    # create alter sql for column modify
+    grep -f $tmp/DEL $tmp/ADD |while read dupcoln ; do
+      cat $i |sed -n '1,2!p' |sed -n '/^+/p' |grep -f $tmp/ADD |grep $dupcoln |\
+        sed -e 's/,/ /g' -e 's/^+//' -e 's/$//' |\
+        read addtn addcoln addtype addlen addint adddecimal
+      cat $i |sed -n '1,2!p' |sed -n '/^-/p' |grep -f $tmp/DEL |grep $dupcoln |\
+        sed -e 's/,/ /g' -e 's/^-//' -e 's/$//' |\
+        read deltn delcoln deltype dellen delint deldecimal
+      if [ "$addtype" != "$deltype" ]; then
+        if [[ $deltype == "O" && $addtype == "A" ]]; then
+          # dont care this convert
+          :
+        elif [[ $deltype == "A" && $addtype == "P" ]]; then
+          # dont care this convert
+          :
+        else
+          echo $i $dupcoln change from $deltype to $addtype
+        fi
+      else
+        case $addtype in
+        A|O)
+          if [ $addlen -gt $dellen ]; then
+            echo $i $dupcoln $addtype length changed from $dellen to $addlen
+          fi
+        ;;
+        P|S)
+          if [[ $addint -ne $delint || $adddecimal -ne $deldecimal ]]; then
+            echo $i $dupcoln $addtype length changed from $delint,$deldecimal to $addint,$adddecimal
+          fi
+        ;;
+        *)
+          echo $i: $addcoln: $addtype: i cannot convert this type
+        ;;
+        esac
+      fi
+    done
+
+  fi
+
+done

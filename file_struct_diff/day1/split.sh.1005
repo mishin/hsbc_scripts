@@ -1,0 +1,32 @@
+#!/usr/bin/ksh
+
+if [ $# -ne 1 ]; then
+  echo "usage: ./$0 ORACLEhub1.csv"
+  exit 99
+fi
+
+file=$1
+img=${file%.*}
+img=${img#ORACLE}
+
+echo 1 >curline
+mkdir $img 2>/dev/null
+
+# not include tables begin with @
+cat $file |grep -v ^\"@ |awk -F'[",]' '{print $2}' |uniq |while read a ; do
+
+curline=`tail -n 1 curline`
+awk -F'[",]' 'BEGIN {e=0}
+NR=='"$curline"',NR==0 {
+if($0~/^"'"$a"'"/){
+  e=FNR
+  printf "%s,%s,%s,%s,%s,%s\n",$2,$8,$11,$13,$14,$15
+  print FNR > "curline"
+}
+if(e!=0 && e<FNR)exit
+}' $file >./$img/$a
+
+done
+
+rm -f curline
+
