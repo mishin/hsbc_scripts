@@ -52,9 +52,9 @@ esac
 # define the default directory 
 # ----------------------------------------------------------------
 dateStr=`date +%Y%m%d%H%M%S`
-rootDir=/home/yyt/hsbc_script/file_struct_diff/ongoing
-rootDirDay1=/home/yyt/hsbc_script/file_struct_diff/day1
-batchDir=/home/yyt/hsbc_script/batch_jobs
+rootDir=/pub/git/hsbc_scripts/file_struct_diff/ongoing
+rootDirDay1=/pub/git/hsbc_scripts/file_struct_diff/day1
+batchDir=/pub/git/hsbc_scripts/batch_jobs
 logdir=/tmp/log
 logname=$logdir/$iscdc.$type.${dateStr}.log
 [ ! -d $logdir ] && mkdir -p $logdir

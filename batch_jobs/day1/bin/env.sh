@@ -3,7 +3,7 @@
 day1=1
 #tts=0
 
-export rootdir=/home/yyt/hsbc_script/batch_jobs/day1
+export rootdir=/pub/git/hsbc_scripts/batch_jobs/day1
 #export rootdir=/pub/script/proj_oracle/batch_jobs/day1
 #export filepath=/hsbc/orc/data/tmp
 

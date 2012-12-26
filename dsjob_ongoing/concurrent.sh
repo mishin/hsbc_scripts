@@ -18,6 +18,12 @@ fi
 #  $sendmesg "$dateStr today will be ignored" 
 #  exit 9
 #fi
+dayOfWeek=`date +%w`
+if [ $dayOfWeek -eq 1 ]; then
+    echo "ignore Monday"
+    $sendmesg "Monday will be ignored"
+    exit 9
+fi
 
 joblist=$1
 
