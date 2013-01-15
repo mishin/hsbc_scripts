@@ -1,0 +1,14 @@
+1115.change
+类似目录为日常release时更新的表结构，其中bak下为老表表结构
+
+tts
+该目录为当前ongoing phase 最新的表结构
+
+4cdc.lst
+4date.lst
+文件包含属于该类别的表名
+
+tts.lst
+包含所有tts表名
+
+
